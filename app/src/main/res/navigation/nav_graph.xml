@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.test.nmla.doctrina.presentation.fragments.LoginFragment"
+        android:label="LoginFragment">
+        <action
+            android:id="@+id/action_loginFragment_to_loginCodeConfirmationFragment"
+            app:destination="@id/loginCodeConfirmationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginCodeConfirmationFragment"
+        android:name="com.test.nmla.doctrina.presentation.fragments.LoginCodeConfirmationFragment"
+        android:label="LoginCodeConfirmationFragment">
+        <action
+            android:id="@+id/action_loginCodeConfirmationFragment_to_animationFragment"
+            app:destination="@id/animationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/animationFragment"
+        android:name="com.test.nmla.doctrina.presentation.fragments.AnimationFragment"
+        android:label="fragment_animation"
+        tools:layout="@layout/fragment_animation">
+        <action
+            android:id="@+id/action_animationFragment_to_webFragment"
+            app:destination="@id/webFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webFragment"
+        android:name="com.test.nmla.doctrina.presentation.fragments.WebFragment"
+        android:label="fragment_web"
+        tools:layout="@layout/fragment_web" />
+</navigation>
