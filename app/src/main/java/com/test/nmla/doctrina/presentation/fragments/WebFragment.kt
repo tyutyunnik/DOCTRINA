@@ -41,6 +41,10 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 }
             }
 
+            logOutLinearLayout.setOnClickListener {
+// TODO:  
+            }
+
             flagBtnMenuWeb.setImageResource(R.drawable.flag_yellow)
             flagBtnMenuWeb.setOnClickListener {
                 setInactiveIcons()
@@ -48,6 +52,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 link = "https://www.google.com"
                 webView.loadUrl(link)
                 titleWeb.visibility = View.GONE
+                logOutLinearLayout.visibility = View.GONE
             }
 
             saveToBtnMenuWeb.setOnClickListener {
@@ -57,6 +62,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 webView.loadUrl(link)
                 titleWeb.visibility = View.VISIBLE
                 titleWeb.text = resources.getString(R.string.choose_a_le).uppercase()
+                logOutLinearLayout.visibility = View.GONE
             }
 
             chatBtnMenuWeb.setOnClickListener {
@@ -65,6 +71,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 link = "https://stackoverflow.com/"
                 webView.loadUrl(link)
                 titleWeb.visibility = View.GONE
+                logOutLinearLayout.visibility = View.GONE
             }
 
             starBtnMenuWeb.setOnClickListener {
@@ -73,6 +80,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 link = "https://developer.android.com/"
                 webView.loadUrl(link)
                 titleWeb.visibility = View.GONE
+                logOutLinearLayout.visibility = View.GONE
             }
 
             settingsBtnMenuWeb.setOnClickListener {
@@ -82,6 +90,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 webView.loadUrl(link)
                 titleWeb.visibility = View.VISIBLE
                 titleWeb.text = resources.getString(R.string.your_setting).uppercase()
+                logOutLinearLayout.visibility = View.VISIBLE
             }
         }
     }

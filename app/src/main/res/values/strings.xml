@@ -22,5 +22,6 @@
     <string name="back_button_web">back btn web</string>
     <string name="choose_a_le">выбери тематику</string>
     <string name="your_setting">ваши настройки</string>
+    <string name="log_out">выйти</string>
 
 </resources>
