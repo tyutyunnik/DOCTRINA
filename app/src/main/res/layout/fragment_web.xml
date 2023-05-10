@@ -74,6 +74,15 @@
             android:src="@drawable/arrow_right_yellow" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        android:background="@color/web_bottom_transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/webView"
+        app:layout_constraintEnd_toEndOf="@+id/webView"
+        app:layout_constraintStart_toStartOf="@+id/webView" />
+
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/menuLayout"
         android:layout_width="match_parent"

@@ -6,13 +6,13 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.test.nmla.doctrina.R
@@ -25,6 +25,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_confirmation) {
     private lateinit var binding: FragmentLoginCodeConfirmationBinding
     private lateinit var sharedPreferences: SharedPreferences
@@ -32,6 +33,9 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
     private var imageUrlSP = ""
 
     private var code = ""
+
+    private lateinit var codeNumberEditTextList: ArrayList<AppCompatEditText>
+
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,6 +45,7 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
             requireActivity().getSharedPreferences("sharedP", AppCompatActivity.MODE_PRIVATE)
         emailSP = sharedPreferences.getString("email", "").toString()
         imageUrlSP = sharedPreferences.getString("imageUrl", "").toString()
+        codeNumberEditTextList = ArrayList()
 
         with(binding) {
 
@@ -66,6 +71,7 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
     }
 
     private fun textChangeListenerToEditText(number: AppCompatEditText) {
+        codeNumberEditTextList.add(number)
         number.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 DrawableCompat.setTint(
@@ -79,12 +85,27 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
             }
 
             override fun afterTextChanged(p0: Editable?) {
+                setCodeEditTextFocus(p0, number)
             }
 
         })
+    }
+
+    private fun setCodeEditTextFocus(c: Editable?, editText: AppCompatEditText) {
+        val index = codeNumberEditTextList.indexOf(editText)
+        if (c != null) {
+            if (c.length == 1) {
+                if (index != codeNumberEditTextList.size - 1) {
+                    codeNumberEditTextList[index + 1].requestFocus()
+                } else {
+                    editText.clearFocus()
+                }
+            }
+        }
     }
 
     private fun getCodeNumbers() {
@@ -124,3 +145,4 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
         )
     }
 }
+

@@ -51,6 +51,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                         } else if (buttonIdList[lastItemIndex - 1] == saveToBtnMenuWeb) {
                             setInactiveIcons()
                             backBtnHistoryChange(saveToBtnMenuWeb, R.drawable.save_to_yellow)
+                            titleWeb.text = resources.getString(R.string.choose_a_le).uppercase()
                         } else if (buttonIdList[lastItemIndex - 1] == chatBtnMenuWeb) {
                             setInactiveIcons()
                             backBtnHistoryChange(chatBtnMenuWeb, R.drawable.talk_cloud_yellow)
@@ -60,6 +61,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                         } else if (buttonIdList[lastItemIndex - 1] == settingsBtnMenuWeb) {
                             setInactiveIcons()
                             backBtnHistoryChange(settingsBtnMenuWeb, R.drawable.settings_yellow)
+                            titleWeb.text = resources.getString(R.string.your_setting).uppercase()
                         }
                     }
                     webView.goBack()
@@ -127,6 +129,22 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     private fun backBtnHistoryChange(imageBtn: ImageButton, imageResource: Int) {
         imageBtn.setImageResource(imageResource)
         buttonIdList.removeAt(lastItemIndex)
+        setTitleAndLogoutVisibility(imageBtn)
+    }
+
+    private fun setTitleAndLogoutVisibility(imageBtn: ImageButton) {
+        with(binding) {
+            if (imageBtn == settingsBtnMenuWeb || imageBtn == saveToBtnMenuWeb) {
+                titleWeb.visibility = View.VISIBLE
+            } else {
+                titleWeb.visibility = View.GONE
+            }
+            if (imageBtn == settingsBtnMenuWeb) {
+                logOutLinearLayout.visibility = View.VISIBLE
+            } else {
+                logOutLinearLayout.visibility = View.GONE
+            }
+        }
     }
 
     private fun changeBtnState(
@@ -135,18 +153,9 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         imageBtn.setImageResource(resourceId)
         with(binding) {
             webView.loadUrl(link)
-            if (imageBtn == settingsBtnMenuWeb || imageBtn == saveToBtnMenuWeb) {
-                titleWeb.visibility = View.VISIBLE
-            } else {
-                titleWeb.visibility = View.GONE
-            }
             titleWeb.text = title
-            if (imageBtn == settingsBtnMenuWeb) {
-                logOutLinearLayout.visibility = View.VISIBLE
-            } else {
-                logOutLinearLayout.visibility = View.GONE
-            }
         }
+        setTitleAndLogoutVisibility(imageBtn)
         buttonIdList.add(imageBtn)
     }
 }

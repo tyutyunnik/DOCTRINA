@@ -11,4 +11,5 @@
     <color name="yellow">#EEE919</color>
     <color name="grey">#898A8C</color>
     <color name="transparent">#00898A8C</color>
+    <color name="web_bottom_transparent">#800E0F12</color>
 </resources>
