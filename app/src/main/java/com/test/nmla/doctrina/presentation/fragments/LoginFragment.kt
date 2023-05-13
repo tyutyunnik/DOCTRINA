@@ -30,7 +30,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private lateinit var emailValidate: String
     private var emailSP = ""
-    private var imageUrl = "https://onlysense.app/mobile.jpg"
+    private var imageUrl = "https://my.doctrina.app/mobile.png"
     private var imageUrlSP = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

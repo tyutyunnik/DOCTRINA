@@ -2,11 +2,12 @@ package com.test.nmla.doctrina.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageButton
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.test.nmla.doctrina.R
 import com.test.nmla.doctrina.databinding.FragmentWebBinding
@@ -42,30 +43,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
             buttonIdList.add(flagBtnMenuWeb)
 
             backBtnWeb.setOnClickListener {
-                if (webView.canGoBack()) {
-                    if (buttonIdList.size != 0) {
-                        lastItemIndex = buttonIdList.size - 1
-                        if (buttonIdList[lastItemIndex - 1] == flagBtnMenuWeb) {
-                            setInactiveIcons()
-                            backBtnHistoryChange(flagBtnMenuWeb, R.drawable.flag_yellow)
-                        } else if (buttonIdList[lastItemIndex - 1] == saveToBtnMenuWeb) {
-                            setInactiveIcons()
-                            backBtnHistoryChange(saveToBtnMenuWeb, R.drawable.save_to_yellow)
-                            titleWeb.text = resources.getString(R.string.choose_a_le).uppercase()
-                        } else if (buttonIdList[lastItemIndex - 1] == chatBtnMenuWeb) {
-                            setInactiveIcons()
-                            backBtnHistoryChange(chatBtnMenuWeb, R.drawable.talk_cloud_yellow)
-                        } else if (buttonIdList[lastItemIndex - 1] == starBtnMenuWeb) {
-                            setInactiveIcons()
-                            backBtnHistoryChange(starBtnMenuWeb, R.drawable.star_yellow)
-                        } else if (buttonIdList[lastItemIndex - 1] == settingsBtnMenuWeb) {
-                            setInactiveIcons()
-                            backBtnHistoryChange(settingsBtnMenuWeb, R.drawable.settings_yellow)
-                            titleWeb.text = resources.getString(R.string.your_setting).uppercase()
-                        }
-                    }
-                    webView.goBack()
-                }
+                setBackButtonsSettings()
             }
 
             logOutLinearLayout.setOnClickListener {
@@ -77,7 +55,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 setInactiveIcons()
                 changeBtnState(
                     flagBtnMenuWeb, R.drawable.flag_yellow,
-                    "https://www.google.com", ""
+                    "https://www.google.com"
                 )
             }
 
@@ -85,7 +63,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 setInactiveIcons()
                 changeBtnState(
                     saveToBtnMenuWeb, R.drawable.save_to_yellow,
-                    "https://github.com", resources.getString(R.string.choose_a_le).uppercase()
+                    "https://github.com"
                 )
             }
 
@@ -93,7 +71,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 setInactiveIcons()
                 changeBtnState(
                     chatBtnMenuWeb, R.drawable.talk_cloud_yellow,
-                    "https://stackoverflow.com/", ""
+                    "https://stackoverflow.com/"
                 )
             }
 
@@ -101,7 +79,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 setInactiveIcons()
                 changeBtnState(
                     starBtnMenuWeb, R.drawable.star_yellow,
-                    "https://developer.android.com/", ""
+                    "https://developer.android.com/"
                 )
             }
 
@@ -109,11 +87,51 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 setInactiveIcons()
                 changeBtnState(
                     settingsBtnMenuWeb, R.drawable.settings_yellow,
-                    "https://developer.android.com/studio",
-                    resources.getString(R.string.your_setting).uppercase()
+                    "https://developer.android.com/studio"
                 )
             }
         }
+        onBackPressed()
+    }
+
+    private fun setBackButtonsSettings() {
+        with(binding) {
+            if (webView.canGoBack()) {
+                if (buttonIdList.size != 0) {
+                    lastItemIndex = buttonIdList.size - 1
+                    if (buttonIdList[lastItemIndex - 1] == flagBtnMenuWeb) {
+                        setInactiveIcons()
+                        backBtnHistoryChange(flagBtnMenuWeb, R.drawable.flag_yellow)
+                    } else if (buttonIdList[lastItemIndex - 1] == saveToBtnMenuWeb) {
+                        setInactiveIcons()
+                        backBtnHistoryChange(saveToBtnMenuWeb, R.drawable.save_to_yellow)
+                    } else if (buttonIdList[lastItemIndex - 1] == chatBtnMenuWeb) {
+                        setInactiveIcons()
+                        backBtnHistoryChange(chatBtnMenuWeb, R.drawable.talk_cloud_yellow)
+                    } else if (buttonIdList[lastItemIndex - 1] == starBtnMenuWeb) {
+                        setInactiveIcons()
+                        backBtnHistoryChange(starBtnMenuWeb, R.drawable.star_yellow)
+                    } else if (buttonIdList[lastItemIndex - 1] == settingsBtnMenuWeb) {
+                        setInactiveIcons()
+                        backBtnHistoryChange(settingsBtnMenuWeb, R.drawable.settings_yellow)
+                    }
+                }
+                webView.goBack()
+            }
+        }
+
+    }
+
+
+    private fun onBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            requireActivity(), object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    setBackButtonsSettings()
+                    findNavController().popBackStack()
+                }
+            }
+        )
     }
 
     private fun setInactiveIcons() {
@@ -134,11 +152,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
     private fun setTitleAndLogoutVisibility(imageBtn: ImageButton) {
         with(binding) {
-            if (imageBtn == settingsBtnMenuWeb || imageBtn == saveToBtnMenuWeb) {
-                titleWeb.visibility = View.VISIBLE
-            } else {
-                titleWeb.visibility = View.GONE
-            }
             if (imageBtn == settingsBtnMenuWeb) {
                 logOutLinearLayout.visibility = View.VISIBLE
             } else {
@@ -148,12 +161,11 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     }
 
     private fun changeBtnState(
-        imageBtn: ImageButton, resourceId: Int, link: String, title: String
+        imageBtn: ImageButton, resourceId: Int, link: String
     ) {
         imageBtn.setImageResource(resourceId)
         with(binding) {
             webView.loadUrl(link)
-            titleWeb.text = title
         }
         setTitleAndLogoutVisibility(imageBtn)
         buttonIdList.add(imageBtn)

@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ServiceBuilder {
-    private const val BASE_URL = "https://api.onlysense.app/"
+    private const val BASE_URL = "https://api.doctrina.app/"
 
     private val client = OkHttpClient.Builder().build()
 

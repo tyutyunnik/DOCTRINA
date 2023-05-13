@@ -28,20 +28,6 @@
         app:layout_constraintTop_toTopOf="@+id/webView"
         tools:ignore="ImageContrastCheck" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/titleWeb"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:textAllCaps="true"
-        android:textAppearance="@style/add_to_favourite"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/logOutLinearLayout"
-        app:layout_constraintStart_toEndOf="@+id/backBtnWeb"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TextContrastCheck" />
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/logOutLinearLayout"
         android:layout_width="wrap_content"
