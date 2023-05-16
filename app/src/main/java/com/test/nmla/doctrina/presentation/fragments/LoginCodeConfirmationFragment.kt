@@ -79,7 +79,12 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
                     ContextCompat.getColor(requireContext(), R.color.yellow)
                 )
                 with(binding) {
-                    nextTV.setTextColor(Color.parseColor("#EEE919"))
+                    nextTV.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.yellow
+                        )
+                    )
                     arrowRight.setImageResource(R.drawable.arrow_right_yellow)
                 }
             }
@@ -133,7 +138,12 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
                     } else {
                         with(binding) {
                             message.setText(R.string.please_enter_code)
-                            message.setTextColor(Color.parseColor("#FF1818"))
+                            message.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.red
+                                )
+                            )
                         }
                     }
                 }

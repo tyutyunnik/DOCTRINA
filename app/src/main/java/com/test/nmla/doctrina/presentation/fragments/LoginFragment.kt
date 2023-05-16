@@ -1,7 +1,6 @@
 package com.test.nmla.doctrina.presentation.fragments
 
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -12,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.test.nmla.doctrina.R
@@ -35,6 +35,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         binding = FragmentLoginBinding.bind(view)
         sharedPreferences =
             requireActivity().getSharedPreferences("sharedP", AppCompatActivity.MODE_PRIVATE)
@@ -52,8 +54,18 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             email.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     emailRemoveBtn.visibility = View.VISIBLE
-                    line.setBackgroundColor(Color.parseColor("#EEE919"))
-                    nextTV.setTextColor(Color.parseColor("#EEE919"))
+                    line.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.yellow
+                        )
+                    )
+                    nextTV.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.yellow
+                        )
+                    )
                     arrowRight.setImageResource(R.drawable.arrow_right_yellow)
                     message.visibility = View.VISIBLE
                 }
@@ -67,8 +79,18 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             })
             emailRemoveBtn.setOnClickListener {
                 email.setText("")
-                line.setBackgroundColor(Color.parseColor("#FFFFFF"))
-                nextTV.setTextColor(Color.parseColor("#FFFFFF"))
+                line.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white
+                    )
+                )
+                nextTV.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white
+                    )
+                )
                 arrowRight.setImageResource(R.drawable.arrow_right)
             }
 
@@ -85,6 +107,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 }
             }
         }
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
 
     }
 
@@ -115,7 +142,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private fun showIncorrectEmailMessage() {
         with(binding) {
             message.setText(R.string.please_enter)
-            message.setTextColor(Color.parseColor("#FF1818"))
+            message.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.red
+                )
+            )
         }
     }
 }

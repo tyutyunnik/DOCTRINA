@@ -22,6 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="360dp"
                 android:scaleType="fitXY"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -31,6 +32,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="565dp"
                 android:gravity="center"
                 android:lineSpacingExtra="23sp"
                 android:text="@string/hello"
@@ -50,7 +53,7 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:lineSpacingExtra="28sp"
-                android:text="@string/to_get_start"
+                android:text="@string/enter_the_c"
                 android:textAllCaps="true"
                 android:textAppearance="@style/to_get_start"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -61,64 +64,113 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/linearLayoutCompat"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="20sp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20sp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@+id/toGetStartTextView">
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/email"
+                    android:id="@+id/firstNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:backgroundTint="@android:color/transparent"
-                    android:hint="@string/your_email_g"
-                    android:letterSpacing="0.2"
-                    android:textColor="@color/grey"
+                    android:backgroundTint="@color/white"
+                    android:maxLength="1"
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:textAlignment="center"
+                    android:textColor="@color/yellow"
                     android:textColorHint="@color/grey"
                     android:textCursorDrawable="@drawable/color_cursor"
-                    android:textSize="13sp"
-                    tools:ignore="TouchTargetSizeCheck" />
+                    android:textSize="20sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/emailRemoveBtn"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/close_button"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/e_remove"
-                    android:visibility="gone"
-                    tools:ignore="TouchTargetSizeCheck" />
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/secondNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/white"
+                    android:maxLength="1"
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:letterSpacing="0.1"
+                    android:textAlignment="center"
+                    android:textColor="@color/yellow"
+                    android:textColorHint="@color/grey"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="20sp"
+                    tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/thirdNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/white"
+                    android:maxLength="1"
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:letterSpacing="0.1"
+                    android:textAlignment="center"
+                    android:textColor="@color/yellow"
+                    android:textColorHint="@color/grey"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="20sp"
+                    tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/fourthNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/white"
+                    android:maxLength="1"
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:letterSpacing="0.1"
+                    android:textAlignment="center"
+                    android:textColor="@color/yellow"
+                    android:textColorHint="@color/grey"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="20sp"
+                    tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/fifthNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/white"
+                    android:maxLength="1"
+                    android:inputType="number"
+                    android:imeOptions="actionDone"
+                    android:letterSpacing="0.1"
+                    android:textAlignment="center"
+                    android:textColor="@color/yellow"
+                    android:textColorHint="@color/grey"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="20sp"
+                    tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <View
-                android:id="@+id/line"
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:background="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat" />
-
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/nextLinearLayout"
-                android:layout_width="wrap_content"
+                android:layout_width="130dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="261dp"
+                android:layout_marginEnd="533dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat">
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -149,13 +201,31 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:lineSpacingExtra="8sp"
-                android:text="@string/at_the_next"
+                android:text="@string/paste_the_c"
                 android:textAppearance="@style/paste_the_c"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nextLinearLayout" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/changeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:letterSpacing="0.2"
+                android:text="@string/change"
+                android:textAllCaps="true"
+                android:textColor="@color/yellow"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/message"
+                tools:ignore="AllCaps" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

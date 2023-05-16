@@ -64,20 +64,18 @@
         android:layout_width="match_parent"
         android:layout_height="84dp"
         android:background="@color/web_bottom_transparent"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/webView"
         app:layout_constraintEnd_toEndOf="@+id/webView"
         app:layout_constraintStart_toStartOf="@+id/webView" />
-
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/menuLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
         android:background="@color/black"
         android:orientation="horizontal"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -86,7 +84,6 @@
             android:id="@+id/flagBtnMenuWeb"
             android:layout_width="64dp"
             android:layout_height="60dp"
-            android:layout_weight="1"
             android:background="@color/transparent"
             android:src="@drawable/flag"
             tools:ignore="SpeakableTextPresentCheck" />
@@ -95,7 +92,6 @@
             android:id="@+id/saveToBtnMenuWeb"
             android:layout_width="64dp"
             android:layout_height="60dp"
-            android:layout_weight="1"
             android:background="@color/transparent"
             android:src="@drawable/save_to"
             tools:ignore="SpeakableTextPresentCheck" />
@@ -104,7 +100,6 @@
             android:id="@+id/chatBtnMenuWeb"
             android:layout_width="64dp"
             android:layout_height="60dp"
-            android:layout_weight="1"
             android:background="@color/transparent"
             android:src="@drawable/talk_cloud"
             tools:ignore="SpeakableTextPresentCheck" />
@@ -113,7 +108,6 @@
             android:id="@+id/starBtnMenuWeb"
             android:layout_width="64dp"
             android:layout_height="60dp"
-            android:layout_weight="1"
             android:background="@color/transparent"
             android:src="@drawable/star"
             tools:ignore="SpeakableTextPresentCheck" />
@@ -122,7 +116,6 @@
             android:id="@+id/settingsBtnMenuWeb"
             android:layout_width="64dp"
             android:layout_height="60dp"
-            android:layout_weight="1"
             android:background="@color/transparent"
             android:src="@drawable/settings"
             tools:ignore="SpeakableTextPresentCheck" />
