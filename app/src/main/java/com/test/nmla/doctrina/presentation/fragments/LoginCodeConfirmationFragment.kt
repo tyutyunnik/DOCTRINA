@@ -2,7 +2,6 @@ package com.test.nmla.doctrina.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -70,6 +69,36 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        with(binding) {
+            setInactiveMode(firstNumber)
+            setInactiveMode(secondNumber)
+            setInactiveMode(thirdNumber)
+            setInactiveMode(fourthNumber)
+            setInactiveMode(fifthNumber)
+        }
+    }
+
+    private fun setInactiveMode(number: AppCompatEditText) {
+        if (!number.isFocused || number.isFocused && number.text?.isEmpty() == true
+        ) {
+            DrawableCompat.setTint(
+                number.background,
+                ContextCompat.getColor(requireContext(), R.color.white)
+            )
+            with(binding) {
+                nextTV.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white
+                    )
+                )
+                arrowRight.setImageResource(R.drawable.arrow_right)
+            }
+        }
+    }
+
     private fun textChangeListenerToEditText(number: AppCompatEditText) {
         codeNumberEditTextList.add(number)
         number.addTextChangedListener(object : TextWatcher {
@@ -90,7 +119,6 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
             }
 
             override fun afterTextChanged(p0: Editable?) {

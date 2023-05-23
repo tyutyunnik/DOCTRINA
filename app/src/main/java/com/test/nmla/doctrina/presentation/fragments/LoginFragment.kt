@@ -7,11 +7,11 @@ import android.text.InputFilter
 import android.text.InputFilter.AllCaps
 import android.text.TextWatcher
 import android.util.Patterns
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.test.nmla.doctrina.R
@@ -35,8 +35,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         binding = FragmentLoginBinding.bind(view)
         sharedPreferences =
             requireActivity().getSharedPreferences("sharedP", AppCompatActivity.MODE_PRIVATE)
@@ -49,49 +47,39 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
             Glide.with(requireContext()).load(imageUrl).into(frontImage)
 
-            email.hint = resources.getString(R.string.your_email_g).uppercase();
-            email.filters = arrayOf<InputFilter>(AllCaps())
-            email.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    emailRemoveBtn.visibility = View.VISIBLE
-                    line.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.yellow
+            email.apply {
+                hint = resources.getString(R.string.your_email_g).uppercase();
+                filters = arrayOf<InputFilter>(AllCaps())
+                addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        emailRemoveBtn.visibility = View.VISIBLE
+                        line.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.yellow
+                            )
                         )
-                    )
-                    nextTV.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.yellow
+                        nextTV.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.yellow
+                            )
                         )
-                    )
-                    arrowRight.setImageResource(R.drawable.arrow_right_yellow)
-                    message.visibility = View.VISIBLE
-                }
+                        arrowRight.setImageResource(R.drawable.arrow_right_yellow)
+                        message.visibility = View.VISIBLE
+                    }
 
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
+                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    }
 
-                override fun afterTextChanged(p0: Editable?) {
-                }
+                    override fun afterTextChanged(p0: Editable?) {
+                    }
+                })
+            }
 
-            })
             emailRemoveBtn.setOnClickListener {
                 email.setText("")
-                line.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.white
-                    )
-                )
-                nextTV.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.white
-                    )
-                )
-                arrowRight.setImageResource(R.drawable.arrow_right)
+                setInactiveMode()
             }
 
             nextLinearLayout.setOnClickListener {
@@ -110,9 +98,32 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
+    private fun setInactiveMode() {
+        with(binding) {
+            line.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
+            nextTV.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
+            arrowRight.setImageResource(R.drawable.arrow_right)
+        }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        with(binding) {
+            if (!email.isFocused || email.isFocused && email.text?.isEmpty() == true) {
+                emailRemoveBtn.visibility = View.GONE
+                setInactiveMode()
+            }
+        }
     }
 
     private fun userEmailVerification(email: String) {
