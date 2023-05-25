@@ -122,13 +122,11 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
     }
 
-
     private fun onBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(
             requireActivity(), object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     setBackButtonsSettings()
-                    findNavController().popBackStack()
                 }
             }
         )
@@ -147,10 +145,10 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     private fun backBtnHistoryChange(imageBtn: ImageButton, imageResource: Int) {
         imageBtn.setImageResource(imageResource)
         buttonIdList.removeAt(lastItemIndex)
-        setTitleAndLogoutVisibility(imageBtn)
+        setLogoutVisibility(imageBtn)
     }
 
-    private fun setTitleAndLogoutVisibility(imageBtn: ImageButton) {
+    private fun setLogoutVisibility(imageBtn: ImageButton) {
         with(binding) {
             if (imageBtn == settingsBtnMenuWeb) {
                 logOutLinearLayout.visibility = View.VISIBLE
@@ -167,7 +165,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         with(binding) {
             webView.loadUrl(link)
         }
-        setTitleAndLogoutVisibility(imageBtn)
+        setLogoutVisibility(imageBtn)
         buttonIdList.add(imageBtn)
     }
 }

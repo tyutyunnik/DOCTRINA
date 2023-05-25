@@ -48,7 +48,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             Glide.with(requireContext()).load(imageUrl).into(frontImage)
 
             email.apply {
-                hint = resources.getString(R.string.your_email_g).uppercase();
+                hint = resources.getString(R.string.your_email_g).uppercase()
                 filters = arrayOf<InputFilter>(AllCaps())
                 addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
