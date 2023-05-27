@@ -36,14 +36,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginEnd="293dp"
                 android:gravity="center"
                 android:lineSpacingExtra="23sp"
                 android:text="@string/hello"
                 android:textAllCaps="true"
                 android:textAppearance="@style/hi_champ_"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/frontImage" />
 
@@ -57,9 +57,8 @@
                 android:lineSpacingExtra="28sp"
                 android:text="@string/to_get_start"
                 android:textAllCaps="true"
-                android:textAppearance="@style/to_get_start"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
+                android:textAppearance="@style/to_get_start"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/hiChampTextView" />
 
@@ -71,6 +70,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20sp"
                 android:orientation="horizontal"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toGetStartTextView">
@@ -110,6 +110,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/white"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat" />
@@ -135,8 +136,7 @@
                     android:layout_weight="1"
                     android:text="@string/next"
                     android:textAllCaps="true"
-                    android:textAppearance="@style/next_"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/next_" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/arrowRight"
