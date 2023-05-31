@@ -4,7 +4,7 @@
 
     <!--    LoginFragment-->
     <string name="hello">Привет!</string>
-    <string name="to_get_start">Чтобы начать, введи свой e-mail</string>
+    <string name="to_get_start">Чтобы начать, введите свой e-mail</string>
     <string name="your_email_g">youremail@gogogo.com</string>
     <string name="close_button">email closing</string>
     <string name="next">Дальше</string>
@@ -12,7 +12,7 @@
     <string name="please_enter">пожалуйста введите правильный e-mail</string>
 
     <!--    LoginCodeConfirmationFragment-->
-    <string name="enter_the_c">Ведите код из письма</string>
+    <string name="enter_the_c">Введите код из письма</string>
     <string name="change"><![CDATA[Изменить >>>]]></string>
     <string name="paste_the_c">вставьте код, отправленный на адрес </string>
     <string name="please_enter_code">пожалуйста, введите правильный код</string>
@@ -23,5 +23,8 @@
     <string name="choose_a_le">выбери тематику</string>
     <string name="your_setting">ваши настройки</string>
     <string name="log_out">выйти</string>
+    <string name="no_internet">отсутствует\nинтернет соединение</string>
+    <string name="no_content">к сожалению все материалы подгружаются динамически из интернета. без него мы не сможем отбразить весь контент.</string>
+    <string name="refresh">обновить</string>
 
 </resources>

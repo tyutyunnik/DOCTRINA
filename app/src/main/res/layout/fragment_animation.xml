@@ -7,13 +7,26 @@
     android:background="@color/black"
     tools:context=".presentation.fragments.AnimationFragment">
 
-    <app.rive.runtime.kotlin.RiveAnimationView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:riveResource="@raw/mummy" />
+<!--    <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+<!--        <app.rive.runtime.kotlin.RiveAnimationView-->
+<!--            android:id="@+id/animation"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:riveAutoPlay="true"-->
+<!--            app:riveLoop="PINGPONG"/>-->
+
+<!--    </androidx.appcompat.widget.LinearLayoutCompat>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

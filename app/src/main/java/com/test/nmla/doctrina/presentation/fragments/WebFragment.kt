@@ -1,12 +1,17 @@
 package com.test.nmla.doctrina.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.test.nmla.doctrina.R
@@ -37,8 +42,33 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                     }
                     return true
                 }
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    swipeRefreshLayout?.isRefreshing = false;
+                    if (url != null) {
+                        link = url
+                    };
+                    super.onPageFinished(view, url)
+                }
             }
-            webView.loadUrl(link)
+
+            setLayoutVisibilitySettings(webView, noInternetLayout)
+            setWebViewLoadingMode()
+
+//            if (isNetworkAvailable(requireContext())) {
+//                setWebViewActive(webView)
+//            } else {
+//                noInternetLayout.visibility = View.VISIBLE
+//                refreshLayout.setOnClickListener {
+//                    noInternetLayout.visibility = View.GONE
+//                    setWebViewActive(webView)
+//                }
+//            }
+
+            swipeRefreshLayout?.setOnRefreshListener {
+//                setWebViewActive(webView)
+                setWebViewLoadingMode()
+            }
 
             buttonIdList.add(flagBtnMenuWeb)
 
@@ -92,6 +122,50 @@ class WebFragment : Fragment(R.layout.fragment_web) {
             }
         }
         onBackPressed()
+    }
+
+    private fun setWebViewLoadingMode() {
+        with(binding) {
+            if (isNetworkAvailable(requireContext())) {
+                setWebViewActive(webView)
+            } else {
+                noInternetLayout.visibility = View.VISIBLE
+                refreshLayout.setOnClickListener {
+                    noInternetLayout.visibility = View.GONE
+                    setWebViewActive(webView)
+                }
+            }
+        }
+    }
+
+    private fun setWebViewActive(view: WebView) {
+        view.apply {
+            visibility = View.VISIBLE
+            loadUrl(link)
+        }
+    }
+
+    private fun setLayoutVisibilitySettings(
+        webView: WebView,
+        noInternetLayout: LinearLayoutCompat
+    ) {
+        webView.visibility = View.GONE
+        noInternetLayout.visibility = View.GONE
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun setWebViewSettings(view: WebView) {
+        view.settings.javaScriptEnabled = true
+        view.settings.setSupportZoom(true)
+        view.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                if (url != null) {
+                    view?.loadUrl(url)
+                }
+                return true
+            }
+        }
+        view.loadUrl(link)
     }
 
     private fun setBackButtonsSettings() {
@@ -167,5 +241,23 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         }
         setLogoutVisibility(imageBtn)
         buttonIdList.add(imageBtn)
+    }
+
+    private fun isNetworkAvailable(context: Context): Boolean {
+        var result = false
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val networkCapabilities = connectivityManager.activeNetwork ?: return false
+            val actNw =
+                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            result = when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        }
+        return result
     }
 }

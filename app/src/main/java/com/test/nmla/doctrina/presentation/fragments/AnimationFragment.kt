@@ -3,10 +3,8 @@ package com.test.nmla.doctrina.presentation.fragments
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
-import androidx.startup.AppInitializer
-import app.rive.runtime.kotlin.RiveInitializer
 import com.test.nmla.doctrina.R
 import com.test.nmla.doctrina.databinding.FragmentAnimationBinding
 import kotlinx.coroutines.Dispatchers
@@ -20,12 +18,13 @@ class AnimationFragment : Fragment(R.layout.fragment_animation) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAnimationBinding.bind(view)
 
-        AppInitializer.getInstance(requireContext())
-            .initializeComponent(RiveInitializer::class.java)
+//        AppInitializer.getInstance(requireContext())
+//            .initializeComponent(RiveInitializer::class.java)
 
         lifecycleScope.launch(context = Dispatchers.Main) {
             delay(2000)
             findNavController().navigate(R.id.action_animationFragment_to_webFragment)
         }
+//        Rive.init(requireContext())
     }
 }

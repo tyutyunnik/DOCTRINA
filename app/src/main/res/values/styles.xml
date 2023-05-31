@@ -43,4 +43,16 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="no_internet_warn">
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textColor">@color/yellow</item>
+    </style>
+
+    <style name="no_materials_warn">
+        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0.2</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>
