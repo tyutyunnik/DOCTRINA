@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.test.nmla.doctrina.R
 import com.test.nmla.doctrina.databinding.FragmentWebBinding
 
+
 class WebFragment : Fragment(R.layout.fragment_web) {
     private lateinit var binding: FragmentWebBinding
 
@@ -44,10 +45,10 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
-                    swipeRefreshLayout?.isRefreshing = false;
+                    swipeRefreshLayout.isRefreshing = false;
                     if (url != null) {
                         link = url
-                    };
+                    }
                     super.onPageFinished(view, url)
                 }
             }
@@ -55,18 +56,11 @@ class WebFragment : Fragment(R.layout.fragment_web) {
             setLayoutVisibilitySettings(webView, noInternetLayout)
             setWebViewLoadingMode()
 
-//            if (isNetworkAvailable(requireContext())) {
-//                setWebViewActive(webView)
-//            } else {
-//                noInternetLayout.visibility = View.VISIBLE
-//                refreshLayout.setOnClickListener {
-//                    noInternetLayout.visibility = View.GONE
-//                    setWebViewActive(webView)
-//                }
-//            }
+            swipeRefreshLayout.setOnRefreshListener {
+                setWebViewLoadingMode()
+            }
 
-            swipeRefreshLayout?.setOnRefreshListener {
-//                setWebViewActive(webView)
+            refreshLayout.setOnClickListener {
                 setWebViewLoadingMode()
             }
 
@@ -126,14 +120,11 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
     private fun setWebViewLoadingMode() {
         with(binding) {
+            setLayoutVisibilitySettings(webView, noInternetLayout)
             if (isNetworkAvailable(requireContext())) {
                 setWebViewActive(webView)
             } else {
                 noInternetLayout.visibility = View.VISIBLE
-                refreshLayout.setOnClickListener {
-                    noInternetLayout.visibility = View.GONE
-                    setWebViewActive(webView)
-                }
             }
         }
     }
@@ -151,21 +142,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     ) {
         webView.visibility = View.GONE
         noInternetLayout.visibility = View.GONE
-    }
-
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun setWebViewSettings(view: WebView) {
-        view.settings.javaScriptEnabled = true
-        view.settings.setSupportZoom(true)
-        view.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                if (url != null) {
-                    view?.loadUrl(url)
-                }
-                return true
-            }
-        }
-        view.loadUrl(link)
     }
 
     private fun setBackButtonsSettings() {
