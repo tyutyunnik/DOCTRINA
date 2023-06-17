@@ -1,9 +1,9 @@
-package com.test.nmla.doctrina.presentation.activity
+package my.doctrina.app.presentation.activity
 
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.test.nmla.doctrina.databinding.ActivityMainBinding
+import my.doctrina.app.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

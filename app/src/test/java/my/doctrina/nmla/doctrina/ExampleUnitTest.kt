@@ -1,4 +1,4 @@
-package com.test.nmla.doctrina
+package my.doctrina.nmla.doctrina
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.test.nmla.doctrina.presentation.fragments
+package my.doctrina.app.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,8 +14,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.test.nmla.doctrina.R
-import com.test.nmla.doctrina.databinding.FragmentWebBinding
+import my.doctrina.app.R
+import my.doctrina.app.databinding.FragmentWebBinding
 
 
 class WebFragment : Fragment(R.layout.fragment_web) {
@@ -45,7 +45,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
-                    swipeRefreshLayout.isRefreshing = false;
+                    swipeRefreshLayout.isRefreshing = false
                     if (url != null) {
                         link = url
                     }

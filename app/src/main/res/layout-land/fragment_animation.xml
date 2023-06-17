@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/black"
-    tools:context=".presentation.fragments.AnimationFragment">
+    tools:context="my.doctrina.app.presentation.fragments.AnimationFragment">
 
     <app.rive.runtime.kotlin.RiveAnimationView
         android:layout_width="match_parent"

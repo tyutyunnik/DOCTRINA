@@ -1,4 +1,4 @@
-package com.test.nmla.doctrina.data.api
+package my.doctrina.app.data.api
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

@@ -1,4 +1,4 @@
-package com.test.nmla.doctrina.presentation.fragments
+package my.doctrina.app.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
@@ -14,12 +14,12 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.test.nmla.doctrina.R
-import com.test.nmla.doctrina.data.api.DOCApi
-import com.test.nmla.doctrina.data.api.ServiceBuilder
-import com.test.nmla.doctrina.data.api.request.SignInConfirmRequest
-import com.test.nmla.doctrina.data.api.response.SignInConfirmResponse
-import com.test.nmla.doctrina.databinding.FragmentLoginCodeConfirmationBinding
+import my.doctrina.app.R
+import my.doctrina.app.data.api.DOCApi
+import my.doctrina.app.data.api.ServiceBuilder
+import my.doctrina.app.data.api.request.SignInConfirmRequest
+import my.doctrina.app.data.api.response.SignInConfirmResponse
+import my.doctrina.app.databinding.FragmentLoginCodeConfirmationBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

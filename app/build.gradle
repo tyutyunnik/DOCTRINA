@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.test.nmla.doctrina'
+    namespace 'my.doctrina.app'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.test.nmla.doctrina"
+        applicationId "my.doctrina.app"
         minSdk 21
         targetSdk 33
         versionCode 1

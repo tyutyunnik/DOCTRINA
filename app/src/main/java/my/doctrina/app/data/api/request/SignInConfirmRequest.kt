@@ -1,4 +1,4 @@
-package com.test.nmla.doctrina.data.api.request
+package my.doctrina.app.data.api.request
 
 import com.google.gson.annotations.SerializedName
 

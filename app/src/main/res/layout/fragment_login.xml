@@ -19,7 +19,7 @@
             android:paddingBottom="20dp"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            tools:context=".presentation.fragments.LoginFragment">
+            tools:context="my.doctrina.app.presentation.fragments.LoginFragment">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/frontImage"
