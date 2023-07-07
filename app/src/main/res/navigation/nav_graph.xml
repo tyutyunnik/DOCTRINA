@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/startFragment">
     <fragment
         android:id="@+id/loginFragment"
         android:name="my.doctrina.app.presentation.fragments.LoginFragment"
-        android:label="LoginFragment">
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_loginCodeConfirmationFragment"
             app:destination="@id/loginCodeConfirmationFragment" />
@@ -15,7 +16,8 @@
     <fragment
         android:id="@+id/loginCodeConfirmationFragment"
         android:name="my.doctrina.app.presentation.fragments.LoginCodeConfirmationFragment"
-        android:label="LoginCodeConfirmationFragment">
+        android:label="LoginCodeConfirmationFragment"
+        tools:layout="@layout/fragment_login_code_confirmation" >
         <action
             android:id="@+id/action_loginCodeConfirmationFragment_to_animationFragment"
             app:destination="@id/animationFragment" />
@@ -39,5 +41,17 @@
             app:destination="@id/loginFragment"
             app:popUpTo="@id/webFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="my.doctrina.app.presentation.fragments.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_startFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_webFragment"
+            app:destination="@id/webFragment" />
     </fragment>
 </navigation>

@@ -2,6 +2,8 @@ package my.doctrina.app.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -11,12 +13,14 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.gson.JsonObject
 import my.doctrina.app.R
 import my.doctrina.app.databinding.FragmentWebBinding
-
 
 class WebFragment : Fragment(R.layout.fragment_web) {
     private lateinit var binding: FragmentWebBinding
@@ -25,18 +29,47 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     private lateinit var buttonIdList: ArrayList<ImageButton>
     private var lastItemIndex = 0
 
+    private lateinit var userPrefs: SharedPreferences
+
+    //    private lateinit var body: JsonObject
+    private lateinit var userObject: JsonObject
+
+    private var accessExpired = 0
+    private var accessToken = ""
+    private var refreshExpired = 0
+    private var refreshToken = ""
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentWebBinding.bind(view)
+        userPrefs =
+            requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
+        accessExpired = userPrefs.getInt("access_expired", 0)
+        accessToken = userPrefs.getString("access_token", "").toString()
+        refreshExpired = userPrefs.getInt("refresh_expired", 0)
+        refreshToken = userPrefs.getString("refresh_token", "").toString()
 
-        link = "https://www.google.com"
+        link = "https://mobile.doctrina.app/"
         buttonIdList = ArrayList()
 
         with(binding) {
+            userLoginBody(accessExpired, accessToken, refreshExpired, refreshToken)
+
             webView.settings.javaScriptEnabled = true
+            webView.settings.javaScriptCanOpenWindowsAutomatically = true
             webView.settings.setSupportZoom(true)
+            webView.settings.domStorageEnabled = true
+
             webView.webViewClient = object : WebViewClient() {
+                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                    if (url != null) {
+                        link = url
+                    }
+                    super.onPageStarted(view, url, favicon)
+                    setUserAuth(userObject, view)
+                }
+
                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                     if (url != null) {
                         view?.loadUrl(url)
@@ -50,10 +83,11 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                         link = url
                     }
                     super.onPageFinished(view, url)
+                    setUserAuth(userObject, view)
                 }
             }
 
-            setLayoutVisibilitySettings(webView, noInternetLayout)
+            setLayoutVisibilitySettings(webView, noInternetLayout, header)
             setWebViewLoadingMode()
 
             swipeRefreshLayout.setOnRefreshListener {
@@ -79,7 +113,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 setInactiveIcons()
                 changeBtnState(
                     flagBtnMenuWeb, R.drawable.flag_yellow,
-                    "https://www.google.com"
+                    "https://mobile.doctrina.app/"
                 )
             }
 
@@ -87,7 +121,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 setInactiveIcons()
                 changeBtnState(
                     saveToBtnMenuWeb, R.drawable.save_to_yellow,
-                    "https://github.com"
+                    "https://mobile.doctrina.app/materials"
                 )
             }
 
@@ -95,7 +129,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 setInactiveIcons()
                 changeBtnState(
                     chatBtnMenuWeb, R.drawable.talk_cloud_yellow,
-                    "https://stackoverflow.com/"
+                    "https://mobile.doctrina.app/feedback"
                 )
             }
 
@@ -103,7 +137,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 setInactiveIcons()
                 changeBtnState(
                     starBtnMenuWeb, R.drawable.star_yellow,
-                    "https://developer.android.com/"
+                    "https://mobile.doctrina.app/favorite"
                 )
             }
 
@@ -111,16 +145,42 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 setInactiveIcons()
                 changeBtnState(
                     settingsBtnMenuWeb, R.drawable.settings_yellow,
-                    "https://developer.android.com/studio"
+                    "https://mobile.doctrina.app/settings"
                 )
             }
         }
         onBackPressed()
     }
 
+    private fun setUserAuth(userObject: JsonObject, view: WebView?) {
+        with(view) {
+            this?.evaluateJavascript(
+                "window.localStorage.setItem('user_auth','$userObject');",
+                null
+            )
+            this?.loadUrl("javascript:localStorage.setItem('user_auth','$userObject');")
+        }
+    }
+
+    private fun userLoginBody(
+        accessExpired: Int,
+        accessToken: String,
+        refreshExpired: Int,
+        refreshToken: String
+    ) {
+        userObject = JsonObject()
+        userObject.addProperty("access_expired", accessExpired)
+        userObject.addProperty("access_token", accessToken)
+        userObject.addProperty("refresh_expired", refreshExpired)
+        userObject.addProperty("refresh_token", refreshToken)
+//        body = JsonObject()
+//        body.add("user", userObject)
+//        Log.d("!!!", userObject.toString())
+    }
+
     private fun setWebViewLoadingMode() {
         with(binding) {
-            setLayoutVisibilitySettings(webView, noInternetLayout)
+            setLayoutVisibilitySettings(webView, noInternetLayout, header)
             if (isNetworkAvailable(requireContext())) {
                 setWebViewActive(webView)
             } else {
@@ -138,10 +198,12 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
     private fun setLayoutVisibilitySettings(
         webView: WebView,
-        noInternetLayout: LinearLayoutCompat
+        noInternetLayout: LinearLayoutCompat,
+        header: AppCompatTextView
     ) {
         webView.visibility = View.GONE
         noInternetLayout.visibility = View.GONE
+        header.visibility = View.GONE
     }
 
     private fun setBackButtonsSettings() {
@@ -214,6 +276,15 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         imageBtn.setImageResource(resourceId)
         with(binding) {
             webView.loadUrl(link)
+
+            // TODO:  
+            if (imageBtn == saveToBtnMenuWeb) {
+                val headerText = webView.evaluateJavascript(
+                    "window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });",
+                    null
+                ).toString()
+                header.text = headerText
+            }
         }
         setLogoutVisibility(imageBtn)
         buttonIdList.add(imageBtn)

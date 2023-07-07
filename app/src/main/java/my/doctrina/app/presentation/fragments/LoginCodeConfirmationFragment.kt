@@ -162,6 +162,16 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
                     response: Response<SignInConfirmResponse>
                 ) {
                     if (response.isSuccessful) {
+                        val accessExpired = response.body()?.accessExpired
+                        val refreshExpired = response.body()?.refreshExpired
+                        if (accessExpired != null && refreshExpired != null) {
+                            saveUser(
+                                accessExpired,
+                                response.body()?.accessToken.toString(),
+                                refreshExpired,
+                                response.body()?.refreshToken.toString()
+                            )
+                        }
                         findNavController().navigate(R.id.action_loginCodeConfirmationFragment_to_animationFragment)
                     } else {
                         with(binding) {
@@ -181,6 +191,22 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
                 }
             }
         )
+    }
+
+    fun saveUser(
+        accessExpired: Int,
+        accessToken: String,
+        refreshExpired: Int,
+        refreshToken: String
+    ) {
+        val userPrefs =
+            requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
+        val editor = userPrefs.edit()
+        editor.putInt("access_expired", accessExpired)
+        editor.putString("access_token", accessToken)
+        editor.putInt("refresh_expired", refreshExpired)
+        editor.putString("refresh_token", refreshToken)
+        editor.apply()
     }
 }
 

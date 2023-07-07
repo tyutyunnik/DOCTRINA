@@ -105,6 +105,21 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ImageContrastCheck" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/header"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textAppearance="@style/to_get_start"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck" />
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/logOutLinearLayout"
         android:layout_width="wrap_content"
@@ -134,7 +149,8 @@
             android:layout_width="20dp"
             android:layout_height="15dp"
             android:layout_gravity="center"
-            android:src="@drawable/arrow_right_yellow" />
+            android:src="@drawable/arrow_right_yellow"
+            tools:ignore="ImageContrastCheck" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <View

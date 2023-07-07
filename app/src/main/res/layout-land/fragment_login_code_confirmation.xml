@@ -57,7 +57,7 @@
                 android:id="@+id/linearLayoutCompat"
                 android:layout_width="410dp"
                 android:layout_height="48dp"
-                android:layout_marginStart="20sp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:orientation="horizontal"
