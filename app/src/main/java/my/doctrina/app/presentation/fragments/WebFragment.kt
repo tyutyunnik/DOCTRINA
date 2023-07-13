@@ -8,9 +8,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.gson.JsonObject
 import my.doctrina.app.R
 import my.doctrina.app.databinding.FragmentWebBinding
+import org.json.JSONObject
 
 class WebFragment : Fragment(R.layout.fragment_web) {
     private lateinit var binding: FragmentWebBinding
@@ -39,7 +40,13 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     private var refreshExpired = 0
     private var refreshToken = ""
 
-    @SuppressLint("SetJavaScriptEnabled")
+    companion object {
+        var webHeaderContent = ""
+    }
+
+    private lateinit var jsHandler: JsHandler
+
+    @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentWebBinding.bind(view)
@@ -55,35 +62,46 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
         with(binding) {
             userLoginBody(accessExpired, accessToken, refreshExpired, refreshToken)
-
-            webView.settings.javaScriptEnabled = true
-            webView.settings.javaScriptCanOpenWindowsAutomatically = true
-            webView.settings.setSupportZoom(true)
-            webView.settings.domStorageEnabled = true
-
-            webView.webViewClient = object : WebViewClient() {
-                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                    if (url != null) {
-                        link = url
-                    }
-                    super.onPageStarted(view, url, favicon)
-                    setUserAuth(userObject, view)
+            webView.apply {
+                settings.apply {
+                    javaScriptEnabled = true
+                    javaScriptCanOpenWindowsAutomatically = true
+                    setSupportZoom(true)
+                    domStorageEnabled = true
                 }
+                jsHandler = JsHandler()
+                addJavascriptInterface(JsHandler(), "jsHandler")
 
-                override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                    if (url != null) {
-                        view?.loadUrl(url)
+                webViewClient = object : WebViewClient() {
+                    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                        if (url != null) {
+                            link = url
+                        }
+                        super.onPageStarted(view, url, favicon)
+                        setUserAuth(userObject, view)
                     }
-                    return true
-                }
 
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    swipeRefreshLayout.isRefreshing = false
-                    if (url != null) {
-                        link = url
+                    override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                        if (url != null) {
+                            view?.loadUrl(url)
+                        }
+                        return true
                     }
-                    super.onPageFinished(view, url)
-                    setUserAuth(userObject, view)
+
+                    override fun onPageFinished(view: WebView?, url: String?) {
+                        swipeRefreshLayout.isRefreshing = false
+                        if (url != null) {
+                            link = url
+                        }
+                        super.onPageFinished(view, url)
+                        setUserAuth(userObject, view)
+                        evaluateJavascript(
+                            "(function() {" +
+                                    "var headers = Array.from(document.head.querySelectorAll('meta')).map(meta => meta.outerHTML);" +
+                                    "window.webkit.messageHandlers.jsHandler.postMessage(JSON.stringify({ headers: header })); })();",
+                            null
+                        )
+                    }
                 }
             }
 
@@ -193,6 +211,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         view.apply {
             visibility = View.VISIBLE
             loadUrl(link)
+            setHeader(link)
         }
     }
 
@@ -276,18 +295,23 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         imageBtn.setImageResource(resourceId)
         with(binding) {
             webView.loadUrl(link)
-
-            // TODO:  
-            if (imageBtn == saveToBtnMenuWeb) {
-                val headerText = webView.evaluateJavascript(
-                    "window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });",
-                    null
-                ).toString()
-                header.text = headerText
-            }
+            setHeader(link)
         }
         setLogoutVisibility(imageBtn)
         buttonIdList.add(imageBtn)
+    }
+
+    private fun setHeader(link: String) {
+        with(binding) {
+            if (link == "https://mobile.doctrina.app/" || link == "https://mobile.doctrina.app/materials" && webHeaderContent != "") {
+                header.apply {
+                    visibility = View.VISIBLE
+                    text = webHeaderContent
+                }
+            } else {
+                header.visibility = View.GONE
+            }
+        }
     }
 
     private fun isNetworkAvailable(context: Context): Boolean {
@@ -307,4 +331,23 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         }
         return result
     }
+
+    class JsHandler {
+        @JavascriptInterface
+        fun postMessage(message: String) {
+            // Обработка сообщения от JavaScript
+            val headerContent: String
+            val json = JSONObject(message)
+            if (json.has("headers")) {
+                val headers = json.getJSONArray("headers")
+                for (i in 0 until headers.length()) {
+                    headerContent = headers.getString(0)
+                    webHeaderContent = headerContent
+                    Log.d("!!!", headerContent)
+                    break
+                }
+            }
+        }
+    }
 }
+
