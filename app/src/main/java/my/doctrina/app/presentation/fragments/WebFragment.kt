@@ -32,7 +32,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
     private lateinit var userPrefs: SharedPreferences
 
-    //    private lateinit var body: JsonObject
+    private lateinit var authJson: JsonObject
     private lateinit var userObject: JsonObject
 
     private var accessExpired = 0
@@ -71,6 +71,32 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 }
                 jsHandler = JsHandler()
                 addJavascriptInterface(JsHandler(), "jsHandler")
+                addJavascriptInterface(WebAppInterface(), "Android")
+
+
+                webChromeClient = object : WebChromeClient() {
+                    // Обработчик загрузки JSON после загрузки страницы
+                    override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                        super.onProgressChanged(view, newProgress)
+                        if (newProgress == 100) {
+                            // Выполняем JavaScript код после загрузки страницы
+//                            webView.loadUrl("javascript:loadJsonFromWebView()")
+//                            evaluateJavascript(
+//                                "loadJsonFromKotlin(JSON.stringify(Android.getJson()));",
+//                                null
+//                            )
+                            evaluateJavascript(
+                                "function loadJsonFromKotlin(jsonString) {" +
+                                        // Полученный JSON из Kotlin в виде строки jsonString
+                                        "var json = JSON.parse(jsonString);" +
+                                        // Здесь вы можете использовать JSON по вашему усмотрению,
+                                        // например, выводить его на страницу или выполнять дополнительные действия с данными.
+                                        "console.log(json);}",
+                                null
+                            )
+                        }
+                    }
+                }
 
                 webViewClient = object : WebViewClient() {
                     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -78,13 +104,21 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                             link = url
                         }
                         super.onPageStarted(view, url, favicon)
-                        setUserAuth(userObject, view)
+                        setUserAuth(authJson, view)
                     }
 
-                    override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                        if (url != null) {
-                            view?.loadUrl(url)
-                        }
+//                    override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+//                        if (url != null) {
+//                            view?.loadUrl(url)
+//                        }
+//                        return true
+//                    }
+
+                    override fun shouldOverrideUrlLoading(
+                        view: WebView?,
+                        request: WebResourceRequest?
+                    ): Boolean {
+                        view?.loadUrl(request?.url.toString())
                         return true
                     }
 
@@ -94,7 +128,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                             link = url
                         }
                         super.onPageFinished(view, url)
-                        setUserAuth(userObject, view)
+                        setUserAuth(authJson, view)
                         evaluateJavascript(
                             "(function() {" +
                                     "var headers = Array.from(document.head.querySelectorAll('meta')).map(meta => meta.outerHTML);" +
@@ -170,13 +204,27 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         onBackPressed()
     }
 
-    private fun setUserAuth(userObject: JsonObject, view: WebView?) {
+    private fun setUserAuth(authJson: JsonObject, view: WebView?) {
         with(view) {
+
             this?.evaluateJavascript(
-                "window.localStorage.setItem('user_auth','$userObject');",
+                "function loadJsonFromKotlin($authJson) {" +
+                        // Полученный JSON из Kotlin в виде строки jsonString
+                        "var json = JSON.parse($authJson);" +
+                        // Здесь вы можете использовать JSON по вашему усмотрению,
+                        // например, выводить его на страницу или выполнять дополнительные действия с данными.
+                        "console.log(json);}",
                 null
             )
-            this?.loadUrl("javascript:localStorage.setItem('user_auth','$userObject');")
+
+            this?.loadUrl("javascript:loadJsonFromWebView()")
+
+
+//            this?.evaluateJavascript(
+//                "window.localStorage.setItem('user_auth','$authJson');",
+//                null
+//            )
+//            this?.loadUrl("javascript:localStorage.setItem('user_auth','$authJson');")
         }
     }
 
@@ -187,12 +235,16 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         refreshToken: String
     ) {
         userObject = JsonObject()
-        userObject.addProperty("access_expired", accessExpired)
-        userObject.addProperty("access_token", accessToken)
-        userObject.addProperty("refresh_expired", refreshExpired)
-        userObject.addProperty("refresh_token", refreshToken)
-//        body = JsonObject()
-//        body.add("user", userObject)
+        userObject.apply {
+            addProperty("access_token", accessToken)
+            addProperty("refresh_token", refreshToken)
+            addProperty("authenticator", "authenticator:oauth2")
+            addProperty("refresh_expired", refreshExpired)
+            addProperty("token_type", "Bearer")
+            addProperty("access_expired", accessExpired)
+        }
+        authJson = JsonObject()
+        authJson.add("authenticated", userObject)
 //        Log.d("!!!", userObject.toString())
     }
 
@@ -303,7 +355,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
     private fun setHeader(link: String) {
         with(binding) {
-            if (link == "https://mobile.doctrina.app/" || link == "https://mobile.doctrina.app/materials" && webHeaderContent != "") {
+            if ((link == "https://mobile.doctrina.app/" || link == "https://mobile.doctrina.app/materials") && webHeaderContent != "") {
                 header.apply {
                     visibility = View.VISIBLE
                     text = webHeaderContent
@@ -331,6 +383,34 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         }
         return result
     }
+
+    inner class WebAppInterface {
+        @JavascriptInterface
+        fun getJson(): String {
+            // Здесь формируем JSON в Kotlin
+            return authJson.toString()
+        }
+
+//        @JavascriptInterface
+//        fun sendJson(jsonString: String) {
+//            // Обработка JSON в Kotlin
+//            val gson = Gson()
+//            val json = gson.fromJson(jsonString, MyJson::class.java)
+//            // Теперь вы можете использовать объект json в вашем коде Kotlin
+//            // Например, вы можете получить значение access_token следующим образом:
+////            val accessToken = json.authenticated.access_token
+//        }
+    }
+
+//    data class MyJson(val authenticated: AuthData)
+//    data class AuthData(
+//        val access_token: String,
+//        val refresh_token: String,
+//        val authenticator: String,
+//        val refresh_expired: Long,
+//        val token_type: String,
+//        val access_expired: Long
+//    )
 
     class JsHandler {
         @JavascriptInterface
