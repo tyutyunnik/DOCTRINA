@@ -169,7 +169,8 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
                                 accessExpired,
                                 response.body()?.accessToken.toString(),
                                 refreshExpired,
-                                response.body()?.refreshToken.toString()
+                                response.body()?.refreshToken.toString(),
+                                response.body()!!.success
                             )
                         }
                         findNavController().navigate(R.id.action_loginCodeConfirmationFragment_to_animationFragment)
@@ -197,7 +198,8 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
         accessExpired: Int,
         accessToken: String,
         refreshExpired: Int,
-        refreshToken: String
+        refreshToken: String,
+        success: Boolean?
     ) {
         val userPrefs =
             requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
@@ -206,6 +208,9 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
         editor.putString("access_token", accessToken)
         editor.putInt("refresh_expired", refreshExpired)
         editor.putString("refresh_token", refreshToken)
+        if (success != null) {
+            editor.putBoolean("success", success)
+        }
         editor.apply()
     }
 }
