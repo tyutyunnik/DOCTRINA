@@ -10,23 +10,21 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.webkit.*
+import android.webkit.JavascriptInterface
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.gson.JsonObject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import my.doctrina.app.R
 import my.doctrina.app.data.MenuLinks
 import my.doctrina.app.databinding.FragmentWebBinding
 import org.json.JSONObject
-import org.jsoup.Jsoup
-import java.io.IOException
 
 class WebFragment : Fragment(R.layout.fragment_web) {
     private lateinit var binding: FragmentWebBinding
@@ -52,7 +50,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
     private lateinit var historyMenuLinks: ArrayList<MenuLinks>
 
-    private var videoTitle = ""
+//    private var videoTitle = ""
 
     companion object {
         var webHeaderContent = ""
@@ -90,6 +88,8 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                     javaScriptCanOpenWindowsAutomatically = true
                     setSupportZoom(true)
                     domStorageEnabled = true
+                    builtInZoomControls = true
+                    allowFileAccess = true
                 }
 
                 webViewClient = object : WebViewClient() {
@@ -203,6 +203,21 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         }
         onBackPressed()
     }
+
+//    private fun getVideoTitleByKHTTP() {
+////        val response = Fuel.get("https://jsonplaceholder.typicode.com/posts/1")
+//        val response = Fuel.get("<Service Link without base path>").responseJson { request, response, result ->
+//            Log.d(“response”, result.get().content)
+//        }
+//
+//        if (response.statusCode == 200) {
+//            val responseBody = response.text
+//            println("Успешный ответ:")
+////            println(responseBody)
+//        } else {
+//            println("Ошибка при выполнении запроса. Код ответа: ${response.statusCode}")
+//        }
+//    }
 
     private fun setUserAuth(authJson: JsonObject, view: WebView?) {
         with(view) {
@@ -387,34 +402,29 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 "https://mobile.doctrina.app/" -> ""
                 "https://mobile.doctrina.app/materials?ID=1" -> ""
                 else -> {
+                    ""
 //                    "else"
-                    getVideoTitle(link)
-                    Log.d("!!!", getVideoTitle(link) )
-//                    webHeaderContent
+//                    getVideoTitle(link)
+//                    Log.d("!!!", getVideoTitle(link))
+////                    webHeaderContent
                 }
             }
-            titleTextView.text = title.toString()
+            titleTextView.text = title
         }
     }
 
-//    fun getVideoTitleWithKHttp(videoUrl: String): String {
-//        val response = get(videoUrl)
-//        val doc = Jsoup.parse(response.text)
-//        return doc.title()
+//    private fun getVideoTitle(videoUrl: String): String {
+//        try {
+//            lifecycleScope.launch(context = Dispatchers.IO) {
+//                val doc = Jsoup.connect(videoUrl).get()
+//                videoTitle = doc.title()
+//            }
+//            return videoTitle
+//        } catch (e: IOException) {
+//            e.printStackTrace()
+//        }
+//        return ""
 //    }
-
-    private fun getVideoTitle(videoUrl: String): String {
-        try {
-            lifecycleScope.launch(context = Dispatchers.IO) {
-                val doc = Jsoup.connect(videoUrl).get()
-                videoTitle = doc.title()
-            }
-            return videoTitle
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return ""
-    }
 
     private fun isNetworkAvailable(context: Context): Boolean {
         var result = false
