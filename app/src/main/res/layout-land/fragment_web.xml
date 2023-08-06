@@ -107,12 +107,12 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title_text_view"
-        android:layout_width="250dp"
+        android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:textAllCaps="true"
-        android:textAppearance="@style/to_get_start"
+        android:textAppearance="@style/web_view_titles"
         android:textColor="@color/white"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"

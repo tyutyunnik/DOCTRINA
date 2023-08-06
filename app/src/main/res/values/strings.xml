@@ -26,8 +26,8 @@
     <string name="no_internet">отсутствует\nинтернет соединение</string>
     <string name="no_content">к сожалению все материалы подгружаются динамически из интернета. без него мы не сможем отбразить весь контент.</string>
     <string name="refresh">обновить</string>
-    <string name="header_materials">ВЫБЕРИ ПРОГРАММУ</string>
-    <string name="header_feedback">ВОПРОСЫ</string>
-    <string name="header_settings">ВАШИ НАСТРОЙКИ</string>
+    <string name="header_materials">выбери программу</string>
+    <string name="header_feedback">вопросы</string>
+    <string name="header_settings">ваши настройки</string>
 
 </resources>

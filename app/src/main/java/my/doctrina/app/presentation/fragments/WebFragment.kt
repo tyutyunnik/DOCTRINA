@@ -10,10 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.webkit.JavascriptInterface
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -24,7 +21,7 @@ import com.google.gson.JsonObject
 import my.doctrina.app.R
 import my.doctrina.app.data.MenuLinks
 import my.doctrina.app.databinding.FragmentWebBinding
-import org.json.JSONObject
+
 
 class WebFragment : Fragment(R.layout.fragment_web) {
     private lateinit var binding: FragmentWebBinding
@@ -52,9 +49,9 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
 //    private var videoTitle = ""
 
-    companion object {
-        var webHeaderContent = ""
-    }
+//    companion object {
+//        var webHeaderContent = ""
+//    }
 
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -90,6 +87,14 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                     domStorageEnabled = true
                     builtInZoomControls = true
                     allowFileAccess = true
+                    mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                    mediaPlaybackRequiresUserGesture = false
+                }
+
+                if (savedInstanceState != null) {
+                    webView.restoreState(savedInstanceState)
+                } else {
+                    setWebViewLoadingMode()
                 }
 
                 webViewClient = object : WebViewClient() {
@@ -136,9 +141,15 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                         }
                         super.onPageFinished(view, url)
                         setUserAuth(authJson, view)
+                        refreshTitle()
                     }
                 }
-                addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
+
+                webChromeClient = object : WebChromeClient() {
+
+                }
+
+                addJavascriptInterface(JavaScriptInterface(requireContext()), "Android")
             }
 
             setLayoutVisibilitySettings(webView, noInternetLayout)
@@ -204,21 +215,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         onBackPressed()
     }
 
-//    private fun getVideoTitleByKHTTP() {
-////        val response = Fuel.get("https://jsonplaceholder.typicode.com/posts/1")
-//        val response = Fuel.get("<Service Link without base path>").responseJson { request, response, result ->
-//            Log.d(“response”, result.get().content)
-//        }
-//
-//        if (response.statusCode == 200) {
-//            val responseBody = response.text
-//            println("Успешный ответ:")
-////            println(responseBody)
-//        } else {
-//            println("Ошибка при выполнении запроса. Код ответа: ${response.statusCode}")
-//        }
-//    }
-
     private fun setUserAuth(authJson: JsonObject, view: WebView?) {
         with(view) {
             this?.evaluateJavascript(
@@ -246,6 +242,11 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         }
         authJson = JsonObject()
         authJson.add("authenticated", userObject)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        binding.webView.saveState(outState)
     }
 
     private fun setWebViewLoadingMode() {
@@ -400,31 +401,74 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                     getString(R.string.header_settings)
                 "https://mobile.doctrina.app/favorite" -> ""
                 "https://mobile.doctrina.app/" -> ""
-                "https://mobile.doctrina.app/materials?ID=1" -> ""
+//                "https://mobile.doctrina.app/materials?ID=1" -> ""
                 else -> {
-                    ""
+//                    if (link.contains("ID")) {
+//                        getString(R.string.header_materials)
+//                        changeBtnState(
+//                            saveToBtnMenuWeb, R.drawable.save_to_yellow,
+//                            "https://mobile.doctrina.app/materials"
+//                        )
+
+//                    }
+//                    else {
+                    setVideoTitleFromWeb(link)
+//                    }
 //                    "else"
-//                    getVideoTitle(link)
-//                    Log.d("!!!", getVideoTitle(link))
-////                    webHeaderContent
                 }
             }
+            Log.d("loaded_link", "loaded link is -> $link")
             titleTextView.text = title
         }
     }
 
-//    private fun getVideoTitle(videoUrl: String): String {
-//        try {
-//            lifecycleScope.launch(context = Dispatchers.IO) {
-//                val doc = Jsoup.connect(videoUrl).get()
-//                videoTitle = doc.title()
-//            }
-//            return videoTitle
-//        } catch (e: IOException) {
-//            e.printStackTrace()
+
+    private fun setVideoTitleFromWeb(link: String): String {
+        // TODO:
+        with(binding) {
+            if (link.contains("ID")) {
+                titleTextView.text = getString(R.string.header_materials)
+//                changeBtnState(
+//                    saveToBtnMenuWeb, R.drawable.save_to_yellow,
+//                    "https://mobile.doctrina.app/materials"
+//                )
+            } else {
+                webView.apply {
+                    evaluateJavascript(
+                        "javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });"
+                    ) { value ->
+                        if (value != null) {
+                            Log.d("???", value)
+                        }
+                    }
+
+                    loadUrl("javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });")
+                }
+            }
+//            val videoCode = """
+//                <video width="320" height="240" controls>
+//                    <source src="$link" type="video/mp4">
+//                    Your browser does not support the video tag.
+//                </video>
+//        """.trimIndent()
+//
+//            loadData(videoCode, "text/html", "UTF-8")
+
+//            evaluateJavascript(
+//                "javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });",
+//                object : ValueCallback<String?> {
+//                    override fun onReceiveValue(p0: String?) {
+//                        if (p0 != null) {
+//                            Log.d("???", p0)
+//                        }
+//                    }
+//                })
+//
+//            loadUrl("javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });")
 //        }
-//        return ""
-//    }
+            return ""
+        }
+    }
 
     private fun isNetworkAvailable(context: Context): Boolean {
         var result = false
@@ -444,21 +488,44 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         return result
     }
 
-    inner class JavaScriptInterface {
+    override fun onResume() {
+        super.onResume()
+        binding.webView.evaluateJavascript("javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });",
+            object : ValueCallback<String?> {
+                override fun onReceiveValue(p0: String?) {
+                    if (p0 != null) {
+                        Log.d("!!!", p0)
+                    }
+                }
+            })
+        binding.webView.loadUrl("javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });")
+    }
+
+    class JavaScriptInterface(private val context: Context) {
         @JavascriptInterface
-        fun handleMessage(message: String) {
-            val jsonObject = JSONObject(message)
-//            val header = jsonObject.getString("element")
-            val value = jsonObject.getString("value")
-
-            if (currentMenuItem.subItem != null) {
-                webHeaderContent = value
-            }
-
-            Log.d("?????", jsonObject.toString())
+        fun postMessage(element: String, value: String) {
+            Log.d("!!!", value)
+            // Обработка полученных данных из JavaScript
+            // Например, вы можете использовать Intent для передачи данных другой активности или фрагменту
         }
     }
+
+//    inner class JavaScriptInterface {
+//        @JavascriptInterface
+//        fun handleMessage(message: String) {
+//            val jsonObject = JSONObject(message)
+////            val header = jsonObject.getString("element")
+//            val value = jsonObject.getString("value")
+//
+//            if (currentMenuItem.subItem != null) {
+//                webHeaderContent = value
+//            }
+//
+//            Log.d("?????", jsonObject.toString())
+//        }
+//    }
 }
+
 
 
 
