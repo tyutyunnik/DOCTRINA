@@ -26,12 +26,8 @@ import my.doctrina.app.databinding.FragmentWebBinding
 class WebFragment : Fragment(R.layout.fragment_web) {
     private lateinit var binding: FragmentWebBinding
 
-    //    private var currentLink = ""
     private lateinit var buttonIdList: ArrayList<ImageButton>
-//    private var lastItemIndex = 0
-
     private lateinit var userPrefs: SharedPreferences
-
     private lateinit var authJson: JsonObject
     private lateinit var userObject: JsonObject
 
@@ -43,11 +39,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
     private lateinit var menuLinks: ArrayList<MenuItem>
 
-//    private lateinit var currentMenuItem: MenuLinks
-
     private lateinit var historyMenuLinks: ArrayList<MenuItem>
-
-//    private var videoTitle = ""
 
 //    companion object {
 //        var webHeaderContent = ""
@@ -74,7 +66,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
             MenuItem(FAVORITE_LINK),
             MenuItem(SETTINGS_LINK),
         )
-//        currentLink = menuLinks[0].url
 
         with(binding) {
             userLoginBody(accessExpired, accessToken, refreshExpired, refreshToken, success)
@@ -102,12 +93,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 webViewClient = object : WebViewClient() {
                     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                         if (url != null) {
-//                            currentLink = if (url.contains("ID")) {
-//                                historyMenuLinks[historyMenuLinks.lastIndex].url
-//                            } else {
-//                                url
-//                            }
-//                            currentLink = url
                             Log.d("loaded link", "onPageStarted - $url")
                         }
                         super.onPageStarted(view, url, favicon)
@@ -138,28 +123,12 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                         if (getCurrentLink() == url) {
                             return
                         }
-//                        menuLinks.forEach { menuLink ->
-//                            if (menuLink.url == url) {
-//                                return
-//                            }
-//                        }
-//                        if (url.contains("ID")) {
-//                            changeBtnState(
-//                                saveToBtnMenuWeb, R.drawable.save_to_yellow,
-//                                "https://mobile.doctrina.app/materials"
-//                            )
-//                        } else {
-//                        getCurrentMenuItem()?.subItem = MenuItem(url, true)
-//                        }
                         changeButtonStateAndAddToHistory(url)
                         refreshTitle()
                     }
 
                     override fun onPageFinished(view: WebView?, url: String?) {
                         swipeRefreshLayout.isRefreshing = false
-//                        if (url != null) {
-//                            currentLink = url
-//                        }
                         super.onPageFinished(view, url)
                         setUserAuth(authJson, view)
                         refreshTitle()
@@ -172,9 +141,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 webChromeClient = object : WebChromeClient() {
 
                 }
-
-//                addJavascriptInterface(JavaScriptInterface(requireContext()), "Android")
-//                addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
             }
 
             setLayoutVisibilitySettings(webView, noInternetLayout)
@@ -198,30 +164,24 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 findNavController().navigate(R.id.action_webFragment_to_loginFragment)
             }
 
-//            changeBtnState(MAIN_LINK)
             changeButtonStateAndAddToHistory(MAIN_LINK)
             flagBtnMenuWeb.setOnClickListener {
-//                changeBtnState(MAIN_LINK)
                 changeButtonStateAndAddToHistory(MAIN_LINK)
             }
 
             saveToBtnMenuWeb.setOnClickListener {
-//                changeBtnState(MATERIALS_LINK)
                 changeButtonStateAndAddToHistory(MATERIALS_LINK)
             }
 
             chatBtnMenuWeb.setOnClickListener {
-//                changeBtnState(FEEDBACK_LINK)
                 changeButtonStateAndAddToHistory(FEEDBACK_LINK)
             }
 
             starBtnMenuWeb.setOnClickListener {
-//                changeBtnState(FAVORITE_LINK)
                 changeButtonStateAndAddToHistory(FAVORITE_LINK)
             }
 
             settingsBtnMenuWeb.setOnClickListener {
-//                changeBtnState(SETTINGS_LINK)
                 changeButtonStateAndAddToHistory(SETTINGS_LINK)
             }
         }
@@ -318,11 +278,8 @@ class WebFragment : Fragment(R.layout.fragment_web) {
             getCurrentMenuItem()?.subItem = null
             binding.webView.goBack()
         } else {
-            with(binding) {
-//                if (webView.canGoBack()) {
-                if (historyMenuLinks.size != 0) {
-                    backBtnHistoryChange()
-                }
+            if (historyMenuLinks.size != 0) {
+                backBtnHistoryChange()
             }
             binding.webView.goBack()
         }
@@ -357,7 +314,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     private fun backBtnHistoryChange() {
         setInactiveIcons()
         historyMenuLinks.removeAt(historyMenuLinks.lastIndex)
-//        val link = historyMenuLinks[historyMenuLinks.lastIndex].url
         val link = getCurrentLink()
         changeBtnState(link)
         setLogoutVisibility(link)
@@ -399,12 +355,10 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 }
             }
         }
-//        imageBtn.setImageResource(resourceId)
         with(binding) {
             webView.loadUrl(link)
         }
         setLogoutVisibility(link)
-//        addMenuItemToHistory(link)
     }
 
     private fun changeButtonStateAndAddToHistory(link: String) {
@@ -415,12 +369,14 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     private fun addMenuItemToHistory(link: String) {
         menuLinks.forEach { menuLink ->
             if (menuLink.url == link) {
-//                getCurrentMenuItem() = menuLink
                 historyMenuLinks.add(menuLink)
                 return
             } else {
                 if (link == MATERIALS_ID_LINK) {
                     historyMenuLinks.add(MenuItem(MATERIALS_ID_LINK))
+                    return
+                } else if (link.contains("video")) {
+                    historyMenuLinks.add(MenuItem(link))
                     return
                 }
             }
@@ -431,55 +387,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         with(binding) {
             val title = getCurrentMenuItem()?.getName(requireContext())
             titleTextView.text = title ?: "null"
-        }
-    }
-
-
-    private fun setVideoTitleFromWeb(link: String): String {
-        // TODO:
-        with(binding) {
-            if (link.contains("ID")) {
-                titleTextView.text = getString(R.string.header_materials)
-//                changeBtnState(
-//                    saveToBtnMenuWeb, R.drawable.save_to_yellow,
-//                    "https://mobile.doctrina.app/materials"
-//                )
-            } else {
-                webView.apply {
-//                    evaluateJavascript(
-//                        "javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });"
-//                    ) { value ->
-//                        if (value != null) {
-//                            Log.d("???", value)
-//                        }
-//                    }
-//
-//                    loadUrl("javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });")
-                }
-                ""
-            }
-//            val videoCode = """
-//                <video width="320" height="240" controls>
-//                    <source src="$link" type="video/mp4">
-//                    Your browser does not support the video tag.
-//                </video>
-//        """.trimIndent()
-//
-//            loadData(videoCode, "text/html", "UTF-8")
-
-//            evaluateJavascript(
-//                "javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });",
-//                object : ValueCallback<String?> {
-//                    override fun onReceiveValue(p0: String?) {
-//                        if (p0 != null) {
-//                            Log.d("???", p0)
-//                        }
-//                    }
-//                })
-//
-//            loadUrl("javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });")
-//        }
-            return ""
         }
     }
 
@@ -501,8 +408,8 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         return result
     }
 
-    override fun onResume() {
-        super.onResume()
+//    override fun onResume() {
+//        super.onResume()
 //        binding.webView.evaluateJavascript("javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });",
 //            object : ValueCallback<String?> {
 //                override fun onReceiveValue(p0: String?) {
@@ -512,7 +419,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 //                }
 //            })
 //        binding.webView.loadUrl("javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });")
-    }
+//    }
 
     inner class JavaScriptInterface {
         @JavascriptInterface
@@ -520,30 +427,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
             Log.d("JavaScriptInterface", "Received message: $message")
         }
     }
-
-//    class JavaScriptInterface(private val context: Context) {
-//        @JavascriptInterface
-//        fun postMessage(element: String, value: String) {
-//            Log.d("!!!", value)
-//            // Обработка полученных данных из JavaScript
-//            // Например, вы можете использовать Intent для передачи данных другой активности или фрагменту
-//        }
-//    }
-
-//    inner class JavaScriptInterface {
-//        @JavascriptInterface
-//        fun handleMessage(message: String) {
-//            val jsonObject = JSONObject(message)
-////            val header = jsonObject.getString("element")
-//            val value = jsonObject.getString("value")
-//
-//            if (currentMenuItem.subItem != null) {
-//                webHeaderContent = value
-//            }
-//
-//            Log.d("?????", jsonObject.toString())
-//        }
-//    }
 }
 
 
