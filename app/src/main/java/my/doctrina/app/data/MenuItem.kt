@@ -25,8 +25,9 @@ data class MenuItem(
             SETTINGS_LINK -> context.getString(R.string.header_settings)
             MATERIALS_ID_LINK -> context.getString(R.string.header_materials)
             else -> {
-                "else"
+                ""
             }
         }
+//        return  ""
     }
 }

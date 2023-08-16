@@ -21,7 +21,7 @@ import com.google.gson.JsonObject
 import my.doctrina.app.R
 import my.doctrina.app.data.*
 import my.doctrina.app.databinding.FragmentWebBinding
-
+import org.json.JSONObject
 
 class WebFragment : Fragment(R.layout.fragment_web) {
     private lateinit var binding: FragmentWebBinding
@@ -40,10 +40,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     private lateinit var menuLinks: ArrayList<MenuItem>
 
     private lateinit var historyMenuLinks: ArrayList<MenuItem>
-
-//    companion object {
-//        var webHeaderContent = ""
-//    }
 
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,7 +75,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                     builtInZoomControls = true
                     allowFileAccess = true
                     mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-                    mediaPlaybackRequiresUserGesture = false
+                    mediaPlaybackRequiresUserGesture = true
                 }
 
                 if (savedInstanceState != null) {
@@ -384,10 +380,12 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     }
 
     private fun setTitleByLink() {
-        with(binding) {
-            val title = getCurrentMenuItem()?.getName(requireContext())
-            titleTextView.text = title ?: "null"
-        }
+        val title = getCurrentMenuItem()?.getName(requireContext())
+        setTitle(title ?: "null")
+    }
+
+    private fun setTitle(title: String) {
+        binding.titleTextView.text = title
     }
 
     private fun isNetworkAvailable(context: Context): Boolean {
@@ -408,24 +406,37 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         return result
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        binding.webView.evaluateJavascript("javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });",
-//            object : ValueCallback<String?> {
-//                override fun onReceiveValue(p0: String?) {
-//                    if (p0 != null) {
-//                        Log.d("!!!", p0)
-//                    }
-//                }
-//            })
-//        binding.webView.loadUrl("javascript:window.webkit.messageHandlers.jsHandler.postMessage({ element: 'header', value: value });")
-//    }
-
     inner class JavaScriptInterface {
         @JavascriptInterface
         fun onMessageReceived(message: String) {
             Log.d("JavaScriptInterface", "Received message: $message")
+
+            val eventData = JSONObject(message)
+
+            when (val element = eventData.getString("element")) {
+                "isFullscreen" -> fullscreenHandle(eventData.getBoolean("value"))
+                "backButton" -> handleBackButton(eventData.getBoolean("value"))
+                "header" -> handleHeader(eventData.getString("value"))
+                else -> Log.d("JavaScriptInterface", "Unknown element: $element")
+            }
         }
+    }
+
+    // Методы для обработки событий
+    fun fullscreenHandle(isFullscreen: Boolean) {
+        // Реализовать логику скрытия/отображения на весь экран
+        Log.d("isFullscreen", "Received message: $isFullscreen")
+    }
+
+    fun handleBackButton(showBackButton: Boolean) {
+        // Реализовать логику показа/скрытия кнопки "назад"
+        Log.d("showBackButton", "Received message: $showBackButton")
+    }
+
+    fun handleHeader(content: String) {
+        // Реализовать логику обновления контента в заголовке
+        setTitle(content)
+        Log.d("handleHeader", "Received message: $content")
     }
 }
 
