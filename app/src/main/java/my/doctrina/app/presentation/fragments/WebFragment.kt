@@ -120,7 +120,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                             return
                         }
                         changeButtonStateAndAddToHistory(url)
-                        refreshTitle()
                     }
 
                     override fun onPageFinished(view: WebView?, url: String?) {
@@ -346,7 +345,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 SETTINGS_LINK -> {
                     settingsBtnMenuWeb.setImageResource(R.drawable.settings_yellow)
                 }
-                MATERIALS_ID_LINK -> {
+                else -> {
                     saveToBtnMenuWeb.setImageResource(R.drawable.save_to_yellow)
                 }
             }
@@ -368,8 +367,9 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 historyMenuLinks.add(menuLink)
                 return
             } else {
-                if (link == MATERIALS_ID_LINK) {
-                    historyMenuLinks.add(MenuItem(MATERIALS_ID_LINK))
+//                if (link == MATERIALS_ID_LINK) {
+                if (link.contains("ID")) {
+                    historyMenuLinks.add(MenuItem(link))
                     return
                 } else if (link.contains("video")) {
                     historyMenuLinks.add(MenuItem(link))
@@ -380,7 +380,13 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     }
 
     private fun setTitleByLink() {
-        val title = getCurrentMenuItem()?.getName(requireContext())
+        val title: String? = if (getCurrentLink().contains("video")) {
+            ""
+        } else if (getCurrentLink().contains("ID")) {
+            getString(R.string.header_materials)
+        } else {
+            getCurrentMenuItem()?.getName(requireContext())
+        }
         setTitle(title ?: "null")
     }
 
@@ -412,30 +418,29 @@ class WebFragment : Fragment(R.layout.fragment_web) {
             Log.d("JavaScriptInterface", "Received message: $message")
 
             val eventData = JSONObject(message)
-
             when (val element = eventData.getString("element")) {
                 "isFullscreen" -> fullscreenHandle(eventData.getBoolean("value"))
-                "backButton" -> handleBackButton(eventData.getBoolean("value"))
-                "header" -> handleHeader(eventData.getString("value"))
+                "backButton" -> backButtonHandle(eventData.getBoolean("value"))
+                "header" -> headerHandle(eventData.getString("value"))
                 else -> Log.d("JavaScriptInterface", "Unknown element: $element")
             }
         }
     }
 
-    // Методы для обработки событий
     fun fullscreenHandle(isFullscreen: Boolean) {
-        // Реализовать логику скрытия/отображения на весь экран
         Log.d("isFullscreen", "Received message: $isFullscreen")
     }
 
-    fun handleBackButton(showBackButton: Boolean) {
-        // Реализовать логику показа/скрытия кнопки "назад"
+    fun backButtonHandle(showBackButton: Boolean) {
         Log.d("showBackButton", "Received message: $showBackButton")
     }
 
-    fun handleHeader(content: String) {
-        // Реализовать логику обновления контента в заголовке
-        setTitle(content)
+    fun headerHandle(content: String) {
+        if (getCurrentLink().contains("video")) {
+            setTitle(content)
+        } else {
+            setTitleByLink()
+        }
         Log.d("handleHeader", "Received message: $content")
     }
 }

@@ -8,7 +8,7 @@ const val MATERIALS_LINK = "https://mobile.doctrina.app/materials"
 const val FEEDBACK_LINK = "https://mobile.doctrina.app/feedback"
 const val FAVORITE_LINK = "https://mobile.doctrina.app/favorite"
 const val SETTINGS_LINK = "https://mobile.doctrina.app/settings"
-const val MATERIALS_ID_LINK = "https://mobile.doctrina.app/materials?ID=1"
+//const val MATERIALS_ID_LINK = "https://mobile.doctrina.app/materials?ID=1"
 
 data class MenuItem(
     val url: String,
@@ -23,11 +23,10 @@ data class MenuItem(
             FEEDBACK_LINK -> context.getString(R.string.header_feedback)
             FAVORITE_LINK -> ""
             SETTINGS_LINK -> context.getString(R.string.header_settings)
-            MATERIALS_ID_LINK -> context.getString(R.string.header_materials)
+//            MATERIALS_ID_LINK -> context.getString(R.string.header_materials)
             else -> {
                 ""
             }
         }
-//        return  ""
     }
 }
