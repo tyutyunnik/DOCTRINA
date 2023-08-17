@@ -437,7 +437,13 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
     fun headerHandle(content: String) {
         if (getCurrentLink().contains("video")) {
-            setTitle(content)
+            val ellipsis = "..."
+            val shortenedText = if (content.length > 20) {
+                content.substring(0, 20 - ellipsis.length) + ellipsis
+            } else {
+                content
+            }
+            setTitle(shortenedText)
         } else {
             setTitleByLink()
         }
