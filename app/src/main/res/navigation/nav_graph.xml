@@ -17,7 +17,7 @@
         android:id="@+id/loginCodeConfirmationFragment"
         android:name="my.doctrina.app.presentation.fragments.LoginCodeConfirmationFragment"
         android:label="LoginCodeConfirmationFragment"
-        tools:layout="@layout/fragment_login_code_confirmation" >
+        tools:layout="@layout/fragment_login_code_confirmation">
         <action
             android:id="@+id/action_loginCodeConfirmationFragment_to_animationFragment"
             app:destination="@id/animationFragment" />
@@ -35,7 +35,7 @@
         android:id="@+id/webFragment"
         android:name="my.doctrina.app.presentation.fragments.WebFragment"
         android:label="fragment_web"
-        tools:layout="@layout/fragment_web" >
+        tools:layout="@layout/fragment_web">
         <action
             android:id="@+id/action_webFragment_to_loginFragment"
             app:destination="@id/loginFragment"
@@ -46,7 +46,7 @@
         android:id="@+id/startFragment"
         android:name="my.doctrina.app.presentation.fragments.StartFragment"
         android:label="fragment_start"
-        tools:layout="@layout/fragment_start" >
+        tools:layout="@layout/fragment_start">
         <action
             android:id="@+id/action_startFragment_to_loginFragment"
             app:destination="@id/loginFragment" />

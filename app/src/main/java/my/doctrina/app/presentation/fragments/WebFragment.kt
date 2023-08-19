@@ -422,17 +422,25 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 "isFullscreen" -> fullscreenHandle(eventData.getBoolean("value"))
                 "backButton" -> backButtonHandle(eventData.getBoolean("value"))
                 "header" -> headerHandle(eventData.getString("value"))
+                "openSignIn" -> noActiveUserErrorOnFrontHandle(eventData.getBoolean("value"))
                 else -> Log.d("JavaScriptInterface", "Unknown element: $element")
             }
         }
     }
 
+    fun noActiveUserErrorOnFrontHandle(isNoActiveUserFound: Boolean) {
+        if (isNoActiveUserFound) {
+            findNavController().navigate(R.id.action_webFragment_to_loginFragment)
+        }
+        Log.d("JavaScriptInterface", "Received message: $isNoActiveUserFound")
+    }
+
     fun fullscreenHandle(isFullscreen: Boolean) {
-        Log.d("isFullscreen", "Received message: $isFullscreen")
+        Log.d("JavaScriptInterface", "Received message: $isFullscreen")
     }
 
     fun backButtonHandle(showBackButton: Boolean) {
-        Log.d("showBackButton", "Received message: $showBackButton")
+        Log.d("JavaScriptInterface", "Received message: $showBackButton")
     }
 
     fun headerHandle(content: String) {
@@ -447,7 +455,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         } else {
             setTitleByLink()
         }
-        Log.d("handleHeader", "Received message: $content")
+        Log.d("JavaScriptInterface", "Received message: $content")
     }
 }
 
