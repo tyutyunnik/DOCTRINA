@@ -3,6 +3,7 @@ package my.doctrina.app.presentation.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -22,6 +23,7 @@ import my.doctrina.app.R
 import my.doctrina.app.data.*
 import my.doctrina.app.databinding.FragmentWebBinding
 import org.json.JSONObject
+
 
 class WebFragment : Fragment(R.layout.fragment_web) {
     private lateinit var binding: FragmentWebBinding
@@ -74,8 +76,8 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                     domStorageEnabled = true
                     builtInZoomControls = true
                     allowFileAccess = true
+                    mediaPlaybackRequiresUserGesture = false
                     mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-                    mediaPlaybackRequiresUserGesture = true
                 }
 
                 if (savedInstanceState != null) {
@@ -133,9 +135,84 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                     }
                 }
 
-                webChromeClient = object : WebChromeClient() {
+                binding.webView.webChromeClient = object : WebChromeClient() {
+//                    private var customView: View? = null
+//                    private var customViewCallback: CustomViewCallback? = null
 
+                    override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
+                        super.onShowCustomView(view, callback)
+//                        if (customView != null) {
+//                            callback?.onCustomViewHidden()
+//                            return
+//                        }
+//                        webView.visibility = View.GONE
+//                        customView = view
+//                        customViewCallback = callback
+//                        binding.videoContainer.addView(customView)
+
+
+                        showFullScreenVideo(view)
+                    }
+
+                    override fun onHideCustomView() {
+                        super.onHideCustomView()
+//                        if (customView == null) {
+//                            return
+//                        }
+//                        webView.visibility = View.VISIBLE
+//                        binding.videoContainer.removeView(customView)
+//
+//                        customViewCallback?.onCustomViewHidden()
+//                        customView = null
+//                        customViewCallback = null
+
+                        hideFullScreenVideo()
+                    }
                 }
+
+//                webChromeClient = object : WebChromeClient() {
+//
+////                    var fullscreen: View? = null
+//
+//                    var customView: View? = null
+//                    var customViewCallback: CustomViewCallback? = null
+//
+//                    override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
+//                        super.onShowCustomView(view, callback)
+//
+//                        if (view is FrameLayout) {
+//                            customView = view
+//                            customViewCallback = callback
+//                            val decorView = requireActivity().window.decorView as FrameLayout
+//                            decorView.addView(customView)
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                                // Для API 30 и выше
+//                                decorView.windowInsetsController?.hide(WindowInsets.Type.systemBars())
+//                            } else {
+//                                // Для более ранних версий API
+//                                decorView.systemUiVisibility =
+//                                    (View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+//                            }
+//                        }
+//                    }
+//
+//                    override fun onHideCustomView() {
+//                        super.onHideCustomView()
+//                        if (customView != null) {
+//                            val decorView = requireActivity().window.decorView as FrameLayout
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                                // Для API 30 и выше
+//                                decorView.windowInsetsController?.show(WindowInsets.Type.systemBars())
+//                            } else {
+//                                // Для более ранних версий API
+//                                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+//                            }
+//                            decorView.removeView(customView)
+//                            customViewCallback?.onCustomViewHidden()
+//                            customView = null
+//                        }
+//                    }
+//                }
             }
 
             setLayoutVisibilitySettings(webView, noInternetLayout)
@@ -181,6 +258,24 @@ class WebFragment : Fragment(R.layout.fragment_web) {
             }
         }
         onBackPressed()
+    }
+
+    private fun showFullScreenVideo(videoView: View?) {
+        with(binding.videoContainer) {
+            addView(videoView)
+            visibility = View.VISIBLE
+        }
+        requireActivity().requestedOrientation =
+            ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+    }
+
+    private fun hideFullScreenVideo() {
+        with(binding.videoContainer) {
+            removeAllViews()
+            visibility = View.GONE
+        }
+        requireActivity().requestedOrientation =
+            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
     private fun setUserAuth(authJson: JsonObject, view: WebView?) {
@@ -246,6 +341,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     }
 
     private fun getCurrentLink(): String {
+//        return "https://youtu.be/C8BP8K-ZuL0?si=UYRTaAHLhMwO36zB"
         return if (historyMenuLinks.isNotEmpty()) {
             historyMenuLinks[historyMenuLinks.lastIndex].url
         } else {
@@ -256,6 +352,11 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     private fun setWebViewActive(view: WebView) {
         view.apply {
             visibility = View.VISIBLE
+//            if (getCurrentLink().contains("video")) {
+//                loadUrl("https://youtu.be/C8BP8K-ZuL0?si=UYRTaAHLhMwO36zB")
+//            } else {
+//                loadUrl(getCurrentLink())
+//            }
             loadUrl(getCurrentLink())
         }
     }
@@ -351,6 +452,11 @@ class WebFragment : Fragment(R.layout.fragment_web) {
             }
         }
         with(binding) {
+//            if (getCurrentLink().contains("video")) {
+//                webView.loadUrl("https://youtu.be/C8BP8K-ZuL0?si=UYRTaAHLhMwO36zB")
+//            } else {
+//                webView.loadUrl(link)
+//            }
             webView.loadUrl(link)
         }
         setLogoutVisibility(link)
@@ -432,10 +538,100 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         if (isNoActiveUserFound) {
             findNavController().navigate(R.id.action_webFragment_to_loginFragment)
         }
-        Log.d("JavaScriptInterface", "Received message: $isNoActiveUserFound")
     }
 
     fun fullscreenHandle(isFullscreen: Boolean) {
+//        if (isFullscreen) {
+//            showFullScreenVideo(binding.videoContainer)
+//        } else {
+//            hideFullScreenVideo()
+//        }
+
+
+//        binding.webView.webChromeClient = object : WebChromeClient() {
+//            override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
+//                super.onShowCustomView(view, callback)
+//                showFullScreenVideo(view)
+//            }
+//
+//            override fun onHideCustomView() {
+//                super.onHideCustomView()
+//                hideFullScreenVideo()
+//            }
+//
+//            //            @SuppressLint("InlinedApi")
+//            private fun showFullScreenVideo(videoView: View?) {
+//                with(binding.videoContainer) {
+//                    addView(
+//                        videoView, ConstraintLayout.LayoutParams(
+//                            ConstraintLayout.LayoutParams.MATCH_PARENT,
+//                            ConstraintLayout.LayoutParams.MATCH_PARENT
+//                        )
+//                    )
+//                    visibility = View.VISIBLE
+//                }
+//                requireActivity().requestedOrientation =
+//                    ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+//            }
+//
+//            private fun hideFullScreenVideo() {
+//                with(binding.videoContainer) {
+//                    removeAllViews()
+//                    visibility = View.GONE
+//                }
+//                requireActivity().requestedOrientation =
+//                    ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+//            }
+//        }
+
+
+//        var isFullscreenEnabled = false
+//        var customView: View? = null
+//        var customViewCallback: WebChromeClient.CustomViewCallback? = null
+//
+//        if (isFullscreen) {
+//            if (!isFullscreenEnabled) {
+//                // Вход в режим полноэкранного воспроизведения
+//                val params = ConstraintLayout.LayoutParams(
+//                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+//                    ConstraintLayout.LayoutParams.MATCH_PARENT
+//                )
+////                customView = WebViewFragment.this.requireView()
+//                customView = requireView()
+//                customView.layoutParams = params
+//
+//                customViewCallback =
+//                    WebChromeClient.CustomViewCallback { // Выход из режима полноэкранного воспроизведения
+//                        customView?.visibility = View.GONE
+//                        customView = null
+//                        customViewCallback = null
+//                        isFullscreenEnabled = false
+//                    }
+//
+//                val decorView = requireActivity().window.decorView as ConstraintLayout
+//                decorView.addView(customView)
+//                customViewCallback?.onCustomViewHidden()
+//                isFullscreenEnabled = true
+//            }
+//        } else {
+//            // Выход из режима полноэкранного воспроизведения
+//            customView?.visibility = View.GONE
+//            val decorView = requireActivity().window.decorView as ConstraintLayout
+//            decorView.removeView(customView)
+//            customViewCallback?.onCustomViewHidden()
+//            isFullscreenEnabled = false
+//        }
+
+
+//        with(binding) {
+//            if (!isFullscreen) {
+//                webView.onShowCustomView(null, null)
+//            } else {
+//                webView.onHideCustomView()
+//            }
+//        }
+
+
         Log.d("JavaScriptInterface", "Received message: $isFullscreen")
     }
 
