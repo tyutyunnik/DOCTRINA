@@ -3,7 +3,6 @@ package my.doctrina.app.presentation.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -12,10 +11,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.webkit.*
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.gson.JsonObject
@@ -72,12 +75,17 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 settings.apply {
                     javaScriptEnabled = true
                     javaScriptCanOpenWindowsAutomatically = true
-                    setSupportZoom(true)
+                    builtInZoomControls = true
+                    displayZoomControls = false
                     domStorageEnabled = true
                     builtInZoomControls = true
                     allowFileAccess = true
-                    mediaPlaybackRequiresUserGesture = false
-                    mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                    allowContentAccess = true
+
+
+//                    setLayerType(View.LAYER_TYPE_HARDWARE, null)
+//                    mediaPlaybackRequiresUserGesture = true
+//                    mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                 }
 
                 if (savedInstanceState != null) {
@@ -135,84 +143,37 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                     }
                 }
 
-                binding.webView.webChromeClient = object : WebChromeClient() {
-//                    private var customView: View? = null
-//                    private var customViewCallback: CustomViewCallback? = null
+                webChromeClient = object : WebChromeClient() {
+                    var fullscreen: View? = null
 
                     override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
                         super.onShowCustomView(view, callback)
-//                        if (customView != null) {
-//                            callback?.onCustomViewHidden()
-//                            return
-//                        }
-//                        webView.visibility = View.GONE
-//                        customView = view
-//                        customViewCallback = callback
-//                        binding.videoContainer.addView(customView)
 
+                        webView.visibility = View.GONE
 
-                        showFullScreenVideo(view)
+                        if (fullscreen != null) {
+                            (requireActivity().window.decorView as FrameLayout).removeView(
+                                fullscreen
+                            )
+                        }
+
+                        fullscreen = view
+                        (requireActivity().window.decorView as FrameLayout).addView(
+                            fullscreen,
+                            FrameLayout.LayoutParams(-1, -1)
+                        )
+                        fullscreen!!.visibility = View.VISIBLE
+
+                        hideSystemUI()
                     }
 
                     override fun onHideCustomView() {
                         super.onHideCustomView()
-//                        if (customView == null) {
-//                            return
-//                        }
-//                        webView.visibility = View.VISIBLE
-//                        binding.videoContainer.removeView(customView)
-//
-//                        customViewCallback?.onCustomViewHidden()
-//                        customView = null
-//                        customViewCallback = null
-
-                        hideFullScreenVideo()
+                        fullscreen?.visibility = View.GONE
+                        webView.visibility = View.VISIBLE
+                        showSystemUI()
                     }
                 }
-
-//                webChromeClient = object : WebChromeClient() {
-//
-////                    var fullscreen: View? = null
-//
-//                    var customView: View? = null
-//                    var customViewCallback: CustomViewCallback? = null
-//
-//                    override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
-//                        super.onShowCustomView(view, callback)
-//
-//                        if (view is FrameLayout) {
-//                            customView = view
-//                            customViewCallback = callback
-//                            val decorView = requireActivity().window.decorView as FrameLayout
-//                            decorView.addView(customView)
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//                                // Для API 30 и выше
-//                                decorView.windowInsetsController?.hide(WindowInsets.Type.systemBars())
-//                            } else {
-//                                // Для более ранних версий API
-//                                decorView.systemUiVisibility =
-//                                    (View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
-//                            }
-//                        }
-//                    }
-//
-//                    override fun onHideCustomView() {
-//                        super.onHideCustomView()
-//                        if (customView != null) {
-//                            val decorView = requireActivity().window.decorView as FrameLayout
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//                                // Для API 30 и выше
-//                                decorView.windowInsetsController?.show(WindowInsets.Type.systemBars())
-//                            } else {
-//                                // Для более ранних версий API
-//                                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-//                            }
-//                            decorView.removeView(customView)
-//                            customViewCallback?.onCustomViewHidden()
-//                            customView = null
-//                        }
-//                    }
-//                }
             }
 
             setLayoutVisibilitySettings(webView, noInternetLayout)
@@ -260,22 +221,20 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         onBackPressed()
     }
 
-    private fun showFullScreenVideo(videoView: View?) {
-        with(binding.videoContainer) {
-            addView(videoView)
-            visibility = View.VISIBLE
+    private fun hideSystemUI() {
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
+        WindowInsetsControllerCompat(requireActivity().window, binding.webView).let { controller ->
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
-        requireActivity().requestedOrientation =
-            ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
     }
 
-    private fun hideFullScreenVideo() {
-        with(binding.videoContainer) {
-            removeAllViews()
-            visibility = View.GONE
-        }
-        requireActivity().requestedOrientation =
-            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+    private fun showSystemUI() {
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, true)
+        WindowInsetsControllerCompat(requireActivity().window, binding.webView).show(
+            WindowInsetsCompat.Type.systemBars()
+        )
     }
 
     private fun setUserAuth(authJson: JsonObject, view: WebView?) {

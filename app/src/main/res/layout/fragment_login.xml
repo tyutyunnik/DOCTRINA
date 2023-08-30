@@ -83,13 +83,13 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:backgroundTint="@android:color/transparent"
+                    android:cursorVisible="false"
                     android:hint="@string/your_email_g"
                     android:letterSpacing="0.2"
                     android:textColor="@color/grey"
                     android:textColorHint="@color/grey"
                     android:textCursorDrawable="@drawable/color_cursor"
                     android:textSize="13sp"
-                    android:cursorVisible="false"
                     tools:ignore="TouchTargetSizeCheck" />
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -123,10 +123,10 @@
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="261dp"
+                android:layout_marginEnd="268dp"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat">
 
