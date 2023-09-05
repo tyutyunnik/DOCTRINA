@@ -20,16 +20,20 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.gson.JsonObject
+import dagger.hilt.android.AndroidEntryPoint
 import my.doctrina.app.R
 import my.doctrina.app.data.*
 import my.doctrina.app.databinding.FragmentWebBinding
+import my.doctrina.app.presentation.viewmodels.WebViewModel
 import org.json.JSONObject
 
-
+@AndroidEntryPoint
 class WebFragment : Fragment(R.layout.fragment_web) {
     private lateinit var binding: FragmentWebBinding
+    private val viewModel: WebViewModel by viewModels()
 
     private lateinit var buttonIdList: ArrayList<ImageButton>
     private lateinit var userPrefs: SharedPreferences
@@ -81,11 +85,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                     builtInZoomControls = true
                     allowFileAccess = true
                     allowContentAccess = true
-
-
-//                    setLayerType(View.LAYER_TYPE_HARDWARE, null)
-//                    mediaPlaybackRequiresUserGesture = true
-//                    mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                 }
 
                 if (savedInstanceState != null) {
@@ -218,6 +217,9 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 changeButtonStateAndAddToHistory(SETTINGS_LINK)
             }
         }
+
+        viewModel.test()
+
         onBackPressed()
     }
 
@@ -411,11 +413,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
             }
         }
         with(binding) {
-//            if (getCurrentLink().contains("video")) {
-//                webView.loadUrl("https://youtu.be/C8BP8K-ZuL0?si=UYRTaAHLhMwO36zB")
-//            } else {
-//                webView.loadUrl(link)
-//            }
             webView.loadUrl(link)
         }
         setLogoutVisibility(link)
@@ -500,97 +497,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     }
 
     fun fullscreenHandle(isFullscreen: Boolean) {
-//        if (isFullscreen) {
-//            showFullScreenVideo(binding.videoContainer)
-//        } else {
-//            hideFullScreenVideo()
-//        }
-
-
-//        binding.webView.webChromeClient = object : WebChromeClient() {
-//            override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
-//                super.onShowCustomView(view, callback)
-//                showFullScreenVideo(view)
-//            }
-//
-//            override fun onHideCustomView() {
-//                super.onHideCustomView()
-//                hideFullScreenVideo()
-//            }
-//
-//            //            @SuppressLint("InlinedApi")
-//            private fun showFullScreenVideo(videoView: View?) {
-//                with(binding.videoContainer) {
-//                    addView(
-//                        videoView, ConstraintLayout.LayoutParams(
-//                            ConstraintLayout.LayoutParams.MATCH_PARENT,
-//                            ConstraintLayout.LayoutParams.MATCH_PARENT
-//                        )
-//                    )
-//                    visibility = View.VISIBLE
-//                }
-//                requireActivity().requestedOrientation =
-//                    ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
-//            }
-//
-//            private fun hideFullScreenVideo() {
-//                with(binding.videoContainer) {
-//                    removeAllViews()
-//                    visibility = View.GONE
-//                }
-//                requireActivity().requestedOrientation =
-//                    ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
-//            }
-//        }
-
-
-//        var isFullscreenEnabled = false
-//        var customView: View? = null
-//        var customViewCallback: WebChromeClient.CustomViewCallback? = null
-//
-//        if (isFullscreen) {
-//            if (!isFullscreenEnabled) {
-//                // Вход в режим полноэкранного воспроизведения
-//                val params = ConstraintLayout.LayoutParams(
-//                    ConstraintLayout.LayoutParams.MATCH_PARENT,
-//                    ConstraintLayout.LayoutParams.MATCH_PARENT
-//                )
-////                customView = WebViewFragment.this.requireView()
-//                customView = requireView()
-//                customView.layoutParams = params
-//
-//                customViewCallback =
-//                    WebChromeClient.CustomViewCallback { // Выход из режима полноэкранного воспроизведения
-//                        customView?.visibility = View.GONE
-//                        customView = null
-//                        customViewCallback = null
-//                        isFullscreenEnabled = false
-//                    }
-//
-//                val decorView = requireActivity().window.decorView as ConstraintLayout
-//                decorView.addView(customView)
-//                customViewCallback?.onCustomViewHidden()
-//                isFullscreenEnabled = true
-//            }
-//        } else {
-//            // Выход из режима полноэкранного воспроизведения
-//            customView?.visibility = View.GONE
-//            val decorView = requireActivity().window.decorView as ConstraintLayout
-//            decorView.removeView(customView)
-//            customViewCallback?.onCustomViewHidden()
-//            isFullscreenEnabled = false
-//        }
-
-
-//        with(binding) {
-//            if (!isFullscreen) {
-//                webView.onShowCustomView(null, null)
-//            } else {
-//                webView.onHideCustomView()
-//            }
-//        }
-
-
         Log.d("JavaScriptInterface", "Received message: $isFullscreen")
     }
 

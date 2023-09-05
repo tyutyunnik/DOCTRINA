@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import my.doctrina.app.R
 import my.doctrina.app.databinding.FragmentStartBinding
 
+@AndroidEntryPoint
 class StartFragment : Fragment(R.layout.fragment_start) {
     private lateinit var binding: FragmentStartBinding
 
