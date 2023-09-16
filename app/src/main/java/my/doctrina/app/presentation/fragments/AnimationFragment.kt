@@ -34,12 +34,18 @@ class AnimationFragment : Fragment(R.layout.fragment_animation) {
 
         lifecycleScope.launch(context = Dispatchers.Main) {
             delay(2000)
-            if (viewModel.isUserTokenExpired(accessExpired)) {
+//            if (viewModel.isUserTokenExpired(accessExpired)) {
+            if (isUserTokenExpired(accessExpired)) {
                 userPrefs.edit().putString("access_token", "").apply()
                 findNavController().navigate(R.id.action_animationFragment_to_startFragment)
             } else {
                 findNavController().navigate(R.id.action_animationFragment_to_webFragment)
             }
         }
+    }
+
+    private fun isUserTokenExpired(accessExpired: Int): Boolean {
+        val currentTime = (System.currentTimeMillis() / 1000).toInt()
+        return accessExpired < currentTime
     }
 }

@@ -8,8 +8,6 @@ class UserCheckInteractor : IUserCheckInteractor {
     }
 
     override fun isUserTokenExpired(accessExpired: Int): Boolean {
-        Log.d("accessExpired", accessExpired.toString())
-
         val currentTime = (System.currentTimeMillis() / 1000).toInt()
         return accessExpired < currentTime
     }
