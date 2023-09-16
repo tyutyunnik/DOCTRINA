@@ -14,4 +14,7 @@ interface DOCApi {
 
     @POST("sign-in/confirm")
     fun signInConfirm(@Body signInConfirmRequest: SignInConfirmRequest) : Call<SignInConfirmResponse>
+
+//    @GET("auth/lifetime")
+//    fun getTokenExpiration(): Call<TokenExpirationResponse>
 }

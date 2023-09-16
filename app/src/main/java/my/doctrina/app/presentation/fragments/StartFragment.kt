@@ -30,7 +30,7 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         if (accessToken == "" || refreshToken == "") {
             findNavController().navigate(R.id.action_startFragment_to_loginFragment)
         } else {
-            findNavController().navigate(R.id.action_startFragment_to_webFragment)
+            findNavController().navigate(R.id.action_startFragment_to_animationFragment)
         }
     }
 }

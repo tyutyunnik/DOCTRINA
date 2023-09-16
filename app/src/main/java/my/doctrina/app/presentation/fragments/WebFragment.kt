@@ -85,6 +85,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                     builtInZoomControls = true
                     allowFileAccess = true
                     allowContentAccess = true
+                    mediaPlaybackRequiresUserGesture = false
                 }
 
                 if (savedInstanceState != null) {
