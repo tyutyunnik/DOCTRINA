@@ -182,7 +182,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/flagBtnMenuWeb"
+            android:id="@+id/homeBtnMenuWeb"
             android:layout_width="64dp"
             android:layout_height="60dp"
             android:background="@color/transparent"
@@ -190,7 +190,7 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/saveToBtnMenuWeb"
+            android:id="@+id/phonesBtnMenuWeb"
             android:layout_width="64dp"
             android:layout_height="60dp"
             android:background="@color/transparent"
@@ -206,7 +206,7 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/starBtnMenuWeb"
+            android:id="@+id/favouriteBtnMenuWeb"
             android:layout_width="64dp"
             android:layout_height="60dp"
             android:background="@color/transparent"

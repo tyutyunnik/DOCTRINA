@@ -112,6 +112,7 @@
         android:background="@color/transparent"
         android:contentDescription="@string/back_button_web"
         android:src="@drawable/back_arrow_web"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ImageContrastCheck" />
@@ -186,21 +187,21 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/flagBtnMenuWeb"
+            android:id="@+id/homeBtnMenuWeb"
             android:layout_width="64dp"
             android:layout_height="60dp"
             android:layout_weight="1"
             android:background="@color/transparent"
-            android:src="@drawable/flag"
+            android:src="@drawable/home"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/saveToBtnMenuWeb"
+            android:id="@+id/phonesBtnMenuWeb"
             android:layout_width="64dp"
             android:layout_height="60dp"
             android:layout_weight="1"
             android:background="@color/transparent"
-            android:src="@drawable/save_to"
+            android:src="@drawable/phones"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <androidx.appcompat.widget.AppCompatImageButton
@@ -213,12 +214,12 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/starBtnMenuWeb"
+            android:id="@+id/favouriteBtnMenuWeb"
             android:layout_width="64dp"
             android:layout_height="60dp"
             android:layout_weight="1"
             android:background="@color/transparent"
-            android:src="@drawable/star"
+            android:src="@drawable/heart"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <androidx.appcompat.widget.AppCompatImageButton

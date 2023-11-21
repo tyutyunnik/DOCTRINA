@@ -50,6 +50,8 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
     private lateinit var historyMenuLinks: ArrayList<MenuItem>
 
+    private var backBtnVisible = false
+
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -187,7 +189,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 setWebViewLoadingMode()
             }
 
-            buttonIdList.add(flagBtnMenuWeb)
+            buttonIdList.add(homeBtnMenuWeb)
 
             backBtnWeb.setOnClickListener {
                 onBackButtonClicked()
@@ -198,11 +200,11 @@ class WebFragment : Fragment(R.layout.fragment_web) {
             }
 
             changeButtonStateAndAddToHistory(MAIN_LINK)
-            flagBtnMenuWeb.setOnClickListener {
+            homeBtnMenuWeb.setOnClickListener {
                 changeButtonStateAndAddToHistory(MAIN_LINK)
             }
 
-            saveToBtnMenuWeb.setOnClickListener {
+            phonesBtnMenuWeb.setOnClickListener {
                 changeButtonStateAndAddToHistory(MATERIALS_LINK)
             }
 
@@ -210,7 +212,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
                 changeButtonStateAndAddToHistory(FEEDBACK_LINK)
             }
 
-            starBtnMenuWeb.setOnClickListener {
+            favouriteBtnMenuWeb.setOnClickListener {
                 changeButtonStateAndAddToHistory(FAVORITE_LINK)
             }
 
@@ -360,10 +362,10 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
     private fun setInactiveIcons() {
         with(binding) {
-            flagBtnMenuWeb.setImageResource(R.drawable.flag)
-            saveToBtnMenuWeb.setImageResource(R.drawable.save_to)
+            homeBtnMenuWeb.setImageResource(R.drawable.home)
+            phonesBtnMenuWeb.setImageResource(R.drawable.phones)
             chatBtnMenuWeb.setImageResource(R.drawable.talk_cloud)
-            starBtnMenuWeb.setImageResource(R.drawable.star)
+            favouriteBtnMenuWeb.setImageResource(R.drawable.heart)
             settingsBtnMenuWeb.setImageResource(R.drawable.settings)
         }
     }
@@ -394,22 +396,22 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         with(binding) {
             when (link) {
                 MAIN_LINK -> {
-                    flagBtnMenuWeb.setImageResource(R.drawable.flag_yellow)
+                    homeBtnMenuWeb.setImageResource(R.drawable.home_yellow)
                 }
                 MATERIALS_LINK -> {
-                    saveToBtnMenuWeb.setImageResource(R.drawable.save_to_yellow)
+                    phonesBtnMenuWeb.setImageResource(R.drawable.phones_yellow)
                 }
                 FEEDBACK_LINK -> {
                     chatBtnMenuWeb.setImageResource(R.drawable.talk_cloud_yellow)
                 }
                 FAVORITE_LINK -> {
-                    starBtnMenuWeb.setImageResource(R.drawable.star_yellow)
+                    favouriteBtnMenuWeb.setImageResource(R.drawable.heart_yellow)
                 }
                 SETTINGS_LINK -> {
                     settingsBtnMenuWeb.setImageResource(R.drawable.settings_yellow)
                 }
                 else -> {
-                    saveToBtnMenuWeb.setImageResource(R.drawable.save_to_yellow)
+                    phonesBtnMenuWeb.setImageResource(R.drawable.phones_yellow)
                 }
             }
         }
@@ -420,8 +422,16 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     }
 
     private fun changeButtonStateAndAddToHistory(link: String) {
+        showBackButton()
         changeBtnState(link)
         addMenuItemToHistory(link)
+    }
+
+    private fun showBackButton() {
+        with(binding){
+            backBtnVisible = true
+            backBtnWeb.visibility = View.VISIBLE
+        }
     }
 
     private fun addMenuItemToHistory(link: String) {
