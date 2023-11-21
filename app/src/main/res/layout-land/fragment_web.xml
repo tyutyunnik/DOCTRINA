@@ -109,6 +109,7 @@
         android:background="@color/transparent"
         android:contentDescription="@string/back_button_web"
         android:src="@drawable/back_arrow_web"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ImageContrastCheck" />
@@ -186,7 +187,7 @@
             android:layout_width="64dp"
             android:layout_height="60dp"
             android:background="@color/transparent"
-            android:src="@drawable/flag"
+            android:src="@drawable/home"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <androidx.appcompat.widget.AppCompatImageButton
@@ -194,7 +195,7 @@
             android:layout_width="64dp"
             android:layout_height="60dp"
             android:background="@color/transparent"
-            android:src="@drawable/save_to"
+            android:src="@drawable/phones"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <androidx.appcompat.widget.AppCompatImageButton
@@ -210,7 +211,7 @@
             android:layout_width="64dp"
             android:layout_height="60dp"
             android:background="@color/transparent"
-            android:src="@drawable/star"
+            android:src="@drawable/heart"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <androidx.appcompat.widget.AppCompatImageButton

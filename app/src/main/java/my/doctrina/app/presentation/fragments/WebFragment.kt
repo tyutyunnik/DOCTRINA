@@ -201,22 +201,27 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
             changeButtonStateAndAddToHistory(MAIN_LINK)
             homeBtnMenuWeb.setOnClickListener {
+                showBackButton()
                 changeButtonStateAndAddToHistory(MAIN_LINK)
             }
 
             phonesBtnMenuWeb.setOnClickListener {
+                showBackButton()
                 changeButtonStateAndAddToHistory(MATERIALS_LINK)
             }
 
             chatBtnMenuWeb.setOnClickListener {
+                showBackButton()
                 changeButtonStateAndAddToHistory(FEEDBACK_LINK)
             }
 
             favouriteBtnMenuWeb.setOnClickListener {
+                showBackButton()
                 changeButtonStateAndAddToHistory(FAVORITE_LINK)
             }
 
             settingsBtnMenuWeb.setOnClickListener {
+                showBackButton()
                 changeButtonStateAndAddToHistory(SETTINGS_LINK)
             }
         }
@@ -422,7 +427,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     }
 
     private fun changeButtonStateAndAddToHistory(link: String) {
-        showBackButton()
+//        showBackButton()
         changeBtnState(link)
         addMenuItemToHistory(link)
     }
