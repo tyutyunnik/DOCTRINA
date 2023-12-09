@@ -1,7 +1,6 @@
 package my.doctrina.app.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,6 +18,7 @@ import my.doctrina.app.data.api.DOCApi
 import my.doctrina.app.data.api.ServiceBuilder
 import my.doctrina.app.data.api.request.SignInConfirmRequest
 import my.doctrina.app.data.api.response.SignInConfirmResponse
+import my.doctrina.app.data.repository.SharedPreferencesRepository
 import my.doctrina.app.databinding.FragmentLoginCodeConfirmationBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,7 +27,9 @@ import retrofit2.Response
 
 class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_confirmation) {
     private lateinit var binding: FragmentLoginCodeConfirmationBinding
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferencesRepository: SharedPreferencesRepository
+
+    //    private lateinit var sharedPreferences: SharedPreferences
     private var emailSP = ""
     private var imageUrlSP = ""
 
@@ -40,10 +42,15 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLoginCodeConfirmationBinding.bind(view)
-        sharedPreferences =
-            requireActivity().getSharedPreferences("sharedP", AppCompatActivity.MODE_PRIVATE)
-        emailSP = sharedPreferences.getString("email", "").toString()
-        imageUrlSP = sharedPreferences.getString("imageUrl", "").toString()
+
+        sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
+//        sharedPreferences =
+//            requireActivity().getSharedPreferences("sharedP", AppCompatActivity.MODE_PRIVATE)
+        
+        emailSP = sharedPreferencesRepository.getEmail("email", "")
+//            sharedPreferences.getString("email", "").toString()
+        imageUrlSP = sharedPreferencesRepository.getImageUrl("imageUrl", "")
+//            sharedPreferences.getString("imageUrl", "").toString()
         codeNumberEditTextList = ArrayList()
 
         with(binding) {
@@ -201,6 +208,8 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
         refreshToken: String,
         success: Boolean?
     ) {
+
+        // TODO:
         val userPrefs =
             requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
         val editor = userPrefs.edit()
