@@ -6,7 +6,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -37,7 +36,6 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
 
     private lateinit var codeNumberEditTextList: ArrayList<AppCompatEditText>
 
-
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,7 +44,7 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
         sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
 //        sharedPreferences =
 //            requireActivity().getSharedPreferences("sharedP", AppCompatActivity.MODE_PRIVATE)
-        
+
         emailSP = sharedPreferencesRepository.getEmail("email", "")
 //            sharedPreferences.getString("email", "").toString()
         imageUrlSP = sharedPreferencesRepository.getImageUrl("imageUrl", "")
@@ -172,7 +170,8 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
                         val accessExpired = response.body()?.accessExpired
                         val refreshExpired = response.body()?.refreshExpired
                         if (accessExpired != null && refreshExpired != null) {
-                            saveUser(
+
+                            sharedPreferencesRepository.saveUserData(
                                 accessExpired,
                                 response.body()?.accessToken.toString(),
                                 refreshExpired,
@@ -201,26 +200,24 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
         )
     }
 
-    fun saveUser(
-        accessExpired: Int,
-        accessToken: String,
-        refreshExpired: Int,
-        refreshToken: String,
-        success: Boolean?
-    ) {
-
-        // TODO:
-        val userPrefs =
-            requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
-        val editor = userPrefs.edit()
-        editor.putInt("access_expired", accessExpired)
-        editor.putString("access_token", accessToken)
-        editor.putInt("refresh_expired", refreshExpired)
-        editor.putString("refresh_token", refreshToken)
-        if (success != null) {
-            editor.putBoolean("success", success)
-        }
-        editor.apply()
-    }
+//    fun saveUser(
+//        accessExpired: Int,
+//        accessToken: String,
+//        refreshExpired: Int,
+//        refreshToken: String,
+//        success: Boolean?
+//    ) {
+//        val userPrefs =
+//            requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
+//        val editor = userPrefs.edit()
+//        editor.putInt("access_expired", accessExpired)
+//        editor.putString("access_token", accessToken)
+//        editor.putInt("refresh_expired", refreshExpired)
+//        editor.putString("refresh_token", refreshToken)
+//        if (success != null) {
+//            editor.putBoolean("success", success)
+//        }
+//        editor.apply()
+//    }
 }
 
