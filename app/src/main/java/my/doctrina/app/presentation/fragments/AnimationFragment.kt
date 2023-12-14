@@ -19,8 +19,6 @@ class AnimationFragment : Fragment(R.layout.fragment_animation) {
     private lateinit var sharedPreferencesRepository: SharedPreferencesRepository
     private val viewModel: AnimationViewModel by viewModels()
 
-//    private lateinit var userPrefs: SharedPreferences
-
     private var accessExpired = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,13 +26,8 @@ class AnimationFragment : Fragment(R.layout.fragment_animation) {
         binding = FragmentAnimationBinding.bind(view)
         sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
 
-//        userPrefs =
-//            requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
-
-
         accessExpired = sharedPreferencesRepository
             .getAccessExpirationUserData("access_expired", 0)
-//            userPrefs.getInt("access_expired", 0)
 
         with(binding.anim) {
             playAnimation()
@@ -42,11 +35,9 @@ class AnimationFragment : Fragment(R.layout.fragment_animation) {
 
         lifecycleScope.launch(context = Dispatchers.Main) {
             delay(2000)
-//            if (viewModel.isUserTokenExpired(accessExpired)) {
             if (isUserTokenExpired(accessExpired)) {
 
                 sharedPreferencesRepository.saveAccessUserToken("access_token", "")
-//                userPrefs.edit().putString("access_token", "").apply()
 
                 findNavController().navigate(R.id.action_animationFragment_to_startFragment)
             } else {

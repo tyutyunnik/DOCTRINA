@@ -28,7 +28,6 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
     private lateinit var binding: FragmentLoginCodeConfirmationBinding
     private lateinit var sharedPreferencesRepository: SharedPreferencesRepository
 
-    //    private lateinit var sharedPreferences: SharedPreferences
     private var emailSP = ""
     private var imageUrlSP = ""
 
@@ -42,13 +41,9 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
         binding = FragmentLoginCodeConfirmationBinding.bind(view)
 
         sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
-//        sharedPreferences =
-//            requireActivity().getSharedPreferences("sharedP", AppCompatActivity.MODE_PRIVATE)
 
         emailSP = sharedPreferencesRepository.getEmail("email", "")
-//            sharedPreferences.getString("email", "").toString()
         imageUrlSP = sharedPreferencesRepository.getImageUrl("imageUrl", "")
-//            sharedPreferences.getString("imageUrl", "").toString()
         codeNumberEditTextList = ArrayList()
 
         with(binding) {
@@ -199,25 +194,5 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
             }
         )
     }
-
-//    fun saveUser(
-//        accessExpired: Int,
-//        accessToken: String,
-//        refreshExpired: Int,
-//        refreshToken: String,
-//        success: Boolean?
-//    ) {
-//        val userPrefs =
-//            requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
-//        val editor = userPrefs.edit()
-//        editor.putInt("access_expired", accessExpired)
-//        editor.putString("access_token", accessToken)
-//        editor.putInt("refresh_expired", refreshExpired)
-//        editor.putString("refresh_token", refreshToken)
-//        if (success != null) {
-//            editor.putBoolean("success", success)
-//        }
-//        editor.apply()
-//    }
 }
 

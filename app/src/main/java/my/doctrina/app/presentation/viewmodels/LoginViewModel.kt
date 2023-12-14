@@ -1,14 +1,13 @@
 package my.doctrina.app.presentation.viewmodels
 
+import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import my.doctrina.app.data.shared_preferences.ISharedPreferencesStorage
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val sharedPrefsStorage: ISharedPreferencesStorage
-) {
-
+//    private val sharedPrefsStorage: ISharedPreferencesStorage
+) : ViewModel() {
 
 
 }

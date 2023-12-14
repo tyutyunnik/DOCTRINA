@@ -38,8 +38,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
 
     private lateinit var buttonIdList: ArrayList<ImageButton>
 
-//    private lateinit var userPrefs: SharedPreferences
-
     private lateinit var authJson: JsonObject
     private lateinit var userObject: JsonObject
 
@@ -61,22 +59,14 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         binding = FragmentWebBinding.bind(view)
         sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
 
-//        userPrefs =
-//            requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
-
         accessExpired = sharedPreferencesRepository.getAccessExpirationUserData("access_expired", 0)
-//            userPrefs.getInt("access_expired", 0)
         accessToken = sharedPreferencesRepository.getAccessUserToken("access_token", "")
-//            userPrefs.getString("access_token", "").toString()
         refreshExpired =
             sharedPreferencesRepository.getRefreshExpirationUserData("refresh_expired", 0)
-//            userPrefs.getInt("refresh_expired", 0)
         refreshToken =
             sharedPreferencesRepository.getRefreshUserToken("refresh_token", "")
-//            userPrefs.getString("refresh_token", "").toString()
         success =
             sharedPreferencesRepository.getStatusUserData("success", false)
-//            userPrefs.getBoolean("success", false)
 
         buttonIdList = ArrayList()
         historyMenuLinks = ArrayList()
@@ -89,7 +79,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         )
 
         with(binding) {
-//            sharedPreferencesRepository.saveUserLoginBody(accessExpired, accessToken, refreshExpired, refreshToken, success)
             userLoginBody(accessExpired, accessToken, refreshExpired, refreshToken, success)
             webView.apply {
 

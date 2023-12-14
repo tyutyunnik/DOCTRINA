@@ -29,26 +29,16 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
 //    private val viewModel: LoginViewModel by viewModels()
 
-//    private lateinit var sharedPreferences: SharedPreferences
-
     private lateinit var emailValidate: String
 
-    //    private var emailSP = ""
     private var imageUrl = "https://my.doctrina.app/mobile.png"
-//    private var imageUrlSP = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLoginBinding.bind(view)
         sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
 
-//        sharedPreferences =
-//            requireActivity().getSharedPreferences("sharedP", AppCompatActivity.MODE_PRIVATE)
-//        emailSP = sharedPreferences.getString("email", "").toString()
-//        imageUrlSP = sharedPreferences.getString("imageUrl", "").toString()
-
         sharedPreferencesRepository.saveImageUrl("imageUrl", imageUrl)
-//        sharedPreferences.edit().putString("imageUrl", imageUrl).apply()
 
         with(binding) {
 
@@ -97,7 +87,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 ) {
 
                     sharedPreferencesRepository.saveEmail("email", emailValidate)
-//                    sharedPreferences.edit().putString("email", emailValidate).apply()
 
                     userEmailVerification(emailValidate)
                 } else {

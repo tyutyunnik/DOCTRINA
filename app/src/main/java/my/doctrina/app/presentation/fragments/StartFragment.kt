@@ -14,8 +14,6 @@ class StartFragment : Fragment(R.layout.fragment_start) {
     private lateinit var binding: FragmentStartBinding
     private lateinit var sharedPreferencesRepository: SharedPreferencesRepository
 
-//    private lateinit var userPrefs: SharedPreferences
-
     private var accessToken = ""
     private var refreshToken = ""
 
@@ -24,15 +22,10 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         binding = FragmentStartBinding.bind(view)
         sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
 
-//        userPrefs =
-//            requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
-
         accessToken =
             sharedPreferencesRepository.getAccessUserToken("access_token", "")
-//            userPrefs.getString("access_token", "").toString()
         refreshToken =
             sharedPreferencesRepository.getRefreshUserToken("refresh_token", "")
-//            userPrefs.getString("refresh_token", "").toString()
 
         if (accessToken == "" || refreshToken == "") {
             findNavController().navigate(R.id.action_startFragment_to_loginFragment)
