@@ -42,33 +42,28 @@ class SharedPreferencesRepository(context: Context) {
         editor.apply()
     }
 
-    fun getAccessExpirationUserData(accessExpiredKey: String, defaultAccessExpiredValue: Int): Int {
-        return sharedPreferences.getInt(accessExpiredKey, defaultAccessExpiredValue)
+    fun getAccessExpirationUserData(): Int {
+        return sharedPreferences.getInt("access_expired", 0)
     }
 
-    fun saveAccessUserToken(tokenKey: String, tokenValue: String) {
-        sharedPreferences.edit().putString(tokenKey, tokenValue).apply()
+    fun saveAccessUserToken() {
+        sharedPreferences.edit().putString("access_token", "").apply()
     }
 
-    fun getAccessUserToken(accessTokenKey: String, defaultAccessTokenValue: String): String {
-        return sharedPreferences.getString(accessTokenKey, defaultAccessTokenValue)
-            ?: defaultAccessTokenValue
+    fun getAccessUserToken(): String {
+        return sharedPreferences.getString("access_token", "") ?: ""
     }
 
-    fun getRefreshUserToken(refreshTokenKey: String, defaultRefreshTokenValue: String): String {
-        return sharedPreferences.getString(refreshTokenKey, defaultRefreshTokenValue)
-            ?: defaultRefreshTokenValue
+    fun getRefreshUserToken(): String {
+        return sharedPreferences.getString("refresh_token", "") ?: ""
     }
 
-    fun getRefreshExpirationUserData(
-        refreshExpiredKey: String,
-        defaultRefreshExpiredValue: Int
-    ): Int {
-        return sharedPreferences.getInt(refreshExpiredKey, defaultRefreshExpiredValue)
+    fun getRefreshExpirationUserData(): Int {
+        return sharedPreferences.getInt("refresh_expired", 0)
     }
 
-    fun getStatusUserData(successKey: String, defaultSuccessValue: Boolean): Boolean {
-        return sharedPreferences.getBoolean(successKey, defaultSuccessValue)
+    fun getStatusUserData(): Boolean {
+        return sharedPreferences.getBoolean("success", false)
     }
 
 //    fun saveUserLoginBody(

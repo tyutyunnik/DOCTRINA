@@ -23,9 +23,9 @@ class StartFragment : Fragment(R.layout.fragment_start) {
         sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
 
         accessToken =
-            sharedPreferencesRepository.getAccessUserToken("access_token", "")
+            sharedPreferencesRepository.getAccessUserToken()
         refreshToken =
-            sharedPreferencesRepository.getRefreshUserToken("refresh_token", "")
+            sharedPreferencesRepository.getRefreshUserToken()
 
         if (accessToken == "" || refreshToken == "") {
             findNavController().navigate(R.id.action_startFragment_to_loginFragment)

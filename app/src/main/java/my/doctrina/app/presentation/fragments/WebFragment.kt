@@ -59,14 +59,14 @@ class WebFragment : Fragment(R.layout.fragment_web) {
         binding = FragmentWebBinding.bind(view)
         sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
 
-        accessExpired = sharedPreferencesRepository.getAccessExpirationUserData("access_expired", 0)
-        accessToken = sharedPreferencesRepository.getAccessUserToken("access_token", "")
+        accessExpired = sharedPreferencesRepository.getAccessExpirationUserData()
+        accessToken = sharedPreferencesRepository.getAccessUserToken()
         refreshExpired =
-            sharedPreferencesRepository.getRefreshExpirationUserData("refresh_expired", 0)
+            sharedPreferencesRepository.getRefreshExpirationUserData()
         refreshToken =
-            sharedPreferencesRepository.getRefreshUserToken("refresh_token", "")
+            sharedPreferencesRepository.getRefreshUserToken()
         success =
-            sharedPreferencesRepository.getStatusUserData("success", false)
+            sharedPreferencesRepository.getStatusUserData()
 
         buttonIdList = ArrayList()
         historyMenuLinks = ArrayList()
