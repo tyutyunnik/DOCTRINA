@@ -162,18 +162,21 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
                     response: Response<SignInConfirmResponse>
                 ) {
                     if (response.isSuccessful) {
-                        val accessExpired = response.body()?.accessExpired
-                        val refreshExpired = response.body()?.refreshExpired
-                        if (accessExpired != null && refreshExpired != null) {
 
-                            sharedPreferencesRepository.saveUserData(
-                                accessExpired,
-                                response.body()?.accessToken.toString(),
-                                refreshExpired,
-                                response.body()?.refreshToken.toString(),
-                                response.body()!!.success
-                            )
-                        }
+                        getUserData(response.body())
+
+//                        val accessExpired = response.body()?.accessExpired
+//                        val refreshExpired = response.body()?.refreshExpired
+//                        if (accessExpired != null && refreshExpired != null) {
+//
+//                            sharedPreferencesRepository.saveUserData(
+//                                accessExpired,
+//                                response.body()?.accessToken.toString(),
+//                                refreshExpired,
+//                                response.body()?.refreshToken.toString(),
+//                                response.body()!!.success
+//                            )
+//                        }
                         findNavController().navigate(R.id.action_loginCodeConfirmationFragment_to_animationFragment)
                     } else {
                         with(binding) {
@@ -194,5 +197,28 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
             }
         )
     }
+
+    private fun getUserData(body: SignInConfirmResponse?) {
+        if (body != null) {
+            with(body) {
+                    val accessExpired = accessExpired
+                    val accessToken = accessToken.toString()
+                    val refreshExpired = refreshExpired
+                    val refreshToken = refreshToken.toString()
+                    val success = success
+
+                    if (accessExpired != null && refreshExpired != null) {
+                        sharedPreferencesRepository.saveUserData(
+                            accessExpired,
+                            accessToken,
+                            refreshExpired,
+                            refreshToken,
+                            success
+                        )
+                    }
+            }
+        }
+    }
 }
+
 
