@@ -2,7 +2,6 @@ package my.doctrina.app.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -14,7 +13,6 @@ import android.webkit.*
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -26,6 +24,7 @@ import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
 import my.doctrina.app.R
 import my.doctrina.app.data.*
+import my.doctrina.app.data.repository.SharedPreferencesRepository
 import my.doctrina.app.databinding.FragmentWebBinding
 import my.doctrina.app.presentation.viewmodels.WebViewModel
 import org.json.JSONObject
@@ -33,10 +32,12 @@ import org.json.JSONObject
 @AndroidEntryPoint
 class WebFragment : Fragment(R.layout.fragment_web) {
     private lateinit var binding: FragmentWebBinding
+    private lateinit var sharedPreferencesRepository: SharedPreferencesRepository
+
     private val viewModel: WebViewModel by viewModels()
 
     private lateinit var buttonIdList: ArrayList<ImageButton>
-    private lateinit var userPrefs: SharedPreferences
+
     private lateinit var authJson: JsonObject
     private lateinit var userObject: JsonObject
 
@@ -56,13 +57,16 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentWebBinding.bind(view)
-        userPrefs =
-            requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
-        accessExpired = userPrefs.getInt("access_expired", 0)
-        accessToken = userPrefs.getString("access_token", "").toString()
-        refreshExpired = userPrefs.getInt("refresh_expired", 0)
-        refreshToken = userPrefs.getString("refresh_token", "").toString()
-        success = userPrefs.getBoolean("success", false)
+        sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
+
+        accessExpired = sharedPreferencesRepository.getAccessExpirationUserData()
+        accessToken = sharedPreferencesRepository.getAccessUserToken()
+        refreshExpired =
+            sharedPreferencesRepository.getRefreshExpirationUserData()
+        refreshToken =
+            sharedPreferencesRepository.getRefreshUserToken()
+        success =
+            sharedPreferencesRepository.getStatusUserData()
 
         buttonIdList = ArrayList()
         historyMenuLinks = ArrayList()
@@ -310,7 +314,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     }
 
     private fun getCurrentLink(): String {
-//        return "https://youtu.be/C8BP8K-ZuL0?si=UYRTaAHLhMwO36zB"
         return if (historyMenuLinks.isNotEmpty()) {
             historyMenuLinks[historyMenuLinks.lastIndex].url
         } else {
@@ -321,11 +324,6 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     private fun setWebViewActive(view: WebView) {
         view.apply {
             visibility = View.VISIBLE
-//            if (getCurrentLink().contains("video")) {
-//                loadUrl("https://youtu.be/C8BP8K-ZuL0?si=UYRTaAHLhMwO36zB")
-//            } else {
-//                loadUrl(getCurrentLink())
-//            }
             loadUrl(getCurrentLink())
         }
     }
@@ -433,7 +431,7 @@ class WebFragment : Fragment(R.layout.fragment_web) {
     }
 
     private fun showBackButton() {
-        with(binding){
+        with(binding) {
             backBtnVisible = true
             backBtnWeb.visibility = View.VISIBLE
         }

@@ -1,13 +1,11 @@
 package my.doctrina.app.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -19,6 +17,7 @@ import my.doctrina.app.data.api.DOCApi
 import my.doctrina.app.data.api.ServiceBuilder
 import my.doctrina.app.data.api.request.SignInConfirmRequest
 import my.doctrina.app.data.api.response.SignInConfirmResponse
+import my.doctrina.app.data.repository.SharedPreferencesRepository
 import my.doctrina.app.databinding.FragmentLoginCodeConfirmationBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,7 +26,8 @@ import retrofit2.Response
 
 class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_confirmation) {
     private lateinit var binding: FragmentLoginCodeConfirmationBinding
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferencesRepository: SharedPreferencesRepository
+
     private var emailSP = ""
     private var imageUrlSP = ""
 
@@ -35,15 +35,15 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
 
     private lateinit var codeNumberEditTextList: ArrayList<AppCompatEditText>
 
-
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLoginCodeConfirmationBinding.bind(view)
-        sharedPreferences =
-            requireActivity().getSharedPreferences("sharedP", AppCompatActivity.MODE_PRIVATE)
-        emailSP = sharedPreferences.getString("email", "").toString()
-        imageUrlSP = sharedPreferences.getString("imageUrl", "").toString()
+
+        sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
+
+        emailSP = sharedPreferencesRepository.getEmail("email", "")
+        imageUrlSP = sharedPreferencesRepository.getImageUrl("imageUrl", "")
         codeNumberEditTextList = ArrayList()
 
         with(binding) {
@@ -162,17 +162,21 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
                     response: Response<SignInConfirmResponse>
                 ) {
                     if (response.isSuccessful) {
-                        val accessExpired = response.body()?.accessExpired
-                        val refreshExpired = response.body()?.refreshExpired
-                        if (accessExpired != null && refreshExpired != null) {
-                            saveUser(
-                                accessExpired,
-                                response.body()?.accessToken.toString(),
-                                refreshExpired,
-                                response.body()?.refreshToken.toString(),
-                                response.body()!!.success
-                            )
-                        }
+
+                        getUserData(response.body())
+
+//                        val accessExpired = response.body()?.accessExpired
+//                        val refreshExpired = response.body()?.refreshExpired
+//                        if (accessExpired != null && refreshExpired != null) {
+//
+//                            sharedPreferencesRepository.saveUserData(
+//                                accessExpired,
+//                                response.body()?.accessToken.toString(),
+//                                refreshExpired,
+//                                response.body()?.refreshToken.toString(),
+//                                response.body()!!.success
+//                            )
+//                        }
                         findNavController().navigate(R.id.action_loginCodeConfirmationFragment_to_animationFragment)
                     } else {
                         with(binding) {
@@ -194,24 +198,27 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
         )
     }
 
-    fun saveUser(
-        accessExpired: Int,
-        accessToken: String,
-        refreshExpired: Int,
-        refreshToken: String,
-        success: Boolean?
-    ) {
-        val userPrefs =
-            requireActivity().getSharedPreferences("user_prefs", AppCompatActivity.MODE_PRIVATE)
-        val editor = userPrefs.edit()
-        editor.putInt("access_expired", accessExpired)
-        editor.putString("access_token", accessToken)
-        editor.putInt("refresh_expired", refreshExpired)
-        editor.putString("refresh_token", refreshToken)
-        if (success != null) {
-            editor.putBoolean("success", success)
+    private fun getUserData(body: SignInConfirmResponse?) {
+        if (body != null) {
+            with(body) {
+                    val accessExpired = accessExpired
+                    val accessToken = accessToken.toString()
+                    val refreshExpired = refreshExpired
+                    val refreshToken = refreshToken.toString()
+                    val success = success
+
+                    if (accessExpired != null && refreshExpired != null) {
+                        sharedPreferencesRepository.saveUserData(
+                            accessExpired,
+                            accessToken,
+                            refreshExpired,
+                            refreshToken,
+                            success
+                        )
+                    }
+            }
         }
-        editor.apply()
     }
 }
+
 

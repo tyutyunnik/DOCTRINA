@@ -1,6 +1,5 @@
 package my.doctrina.app.presentation.fragments
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -9,7 +8,6 @@ import android.text.TextWatcher
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -19,6 +17,7 @@ import my.doctrina.app.data.api.DOCApi
 import my.doctrina.app.data.api.ServiceBuilder
 import my.doctrina.app.data.api.request.SignInRequest
 import my.doctrina.app.data.api.response.SignInResponse
+import my.doctrina.app.data.repository.SharedPreferencesRepository
 import my.doctrina.app.databinding.FragmentLoginBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,22 +25,20 @@ import retrofit2.Response
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var binding: FragmentLoginBinding
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferencesRepository: SharedPreferencesRepository
+
+//    private val viewModel: LoginViewModel by viewModels()
 
     private lateinit var emailValidate: String
-    private var emailSP = ""
+
     private var imageUrl = "https://my.doctrina.app/mobile.png"
-    private var imageUrlSP = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLoginBinding.bind(view)
-        sharedPreferences =
-            requireActivity().getSharedPreferences("sharedP", AppCompatActivity.MODE_PRIVATE)
-        emailSP = sharedPreferences.getString("email", "").toString()
-        imageUrlSP = sharedPreferences.getString("imageUrl", "").toString()
+        sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
 
-        sharedPreferences.edit().putString("imageUrl", imageUrl).apply()
+        sharedPreferencesRepository.saveImageUrl("imageUrl", imageUrl)
 
         with(binding) {
 
@@ -88,7 +85,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 if (emailValidate.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(emailValidate)
                         .matches()
                 ) {
-                    sharedPreferences.edit().putString("email", emailValidate).apply()
+
+                    sharedPreferencesRepository.saveEmail("email", emailValidate)
+
                     userEmailVerification(emailValidate)
                 } else {
                     showIncorrectEmailMessage()
