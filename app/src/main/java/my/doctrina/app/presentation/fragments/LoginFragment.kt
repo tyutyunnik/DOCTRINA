@@ -86,7 +86,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         .matches()
                 ) {
 
-                    sharedPreferencesRepository.saveEmail("email", emailValidate)
+                    sharedPreferencesRepository.saveEmail(emailValidate)
 
                     userEmailVerification(emailValidate)
                 } else {
