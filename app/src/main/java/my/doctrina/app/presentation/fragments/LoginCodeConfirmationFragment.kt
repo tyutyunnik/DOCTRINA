@@ -42,8 +42,10 @@ class LoginCodeConfirmationFragment : Fragment(R.layout.fragment_login_code_conf
 
         sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
 
-        emailSP = sharedPreferencesRepository.getEmail()
-        imageUrlSP = sharedPreferencesRepository.getImageUrl("imageUrl", "")
+//        emailSP = sharedPreferencesRepository.getEmail()
+        emailSP = sharedPreferencesRepository.getString("email")
+//        imageUrlSP = sharedPreferencesRepository.getImageUrl()
+        imageUrlSP = sharedPreferencesRepository.getString("url")
         codeNumberEditTextList = ArrayList()
 
         with(binding) {

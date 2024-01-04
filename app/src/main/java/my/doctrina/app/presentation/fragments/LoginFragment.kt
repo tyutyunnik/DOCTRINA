@@ -38,7 +38,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         binding = FragmentLoginBinding.bind(view)
         sharedPreferencesRepository = SharedPreferencesRepository(requireContext())
 
-        sharedPreferencesRepository.saveImageUrl("imageUrl", imageUrl)
+//        sharedPreferencesRepository.saveImageUrl(imageUrl)
+        sharedPreferencesRepository.saveString(imageUrl)
 
         with(binding) {
 
@@ -86,7 +87,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         .matches()
                 ) {
 
-                    sharedPreferencesRepository.saveEmail(emailValidate)
+//                    sharedPreferencesRepository.saveEmail(emailValidate)
+                    sharedPreferencesRepository.saveString(emailValidate)
 
                     userEmailVerification(emailValidate)
                 } else {
